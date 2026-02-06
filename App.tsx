@@ -3,7 +3,7 @@ import { Birthday, User, ViewState, AppContextType, ModalConfig } from './types'
 import { translateError } from './utils';
 import ShareBirthdayModal from './components/ShareBirthdayModal';
 
-// Components
+// Components FULL TIME!!!!
 import BottomNav from './components/BottomNav';
 import Home from './pages/Home';
 import List from './pages/List';
