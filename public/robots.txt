@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aniversarios-app.vercel.app/sitemap.xml
+Sitemap: https://aniversario.mdiasfotografia.com.br/sitemap.xml
