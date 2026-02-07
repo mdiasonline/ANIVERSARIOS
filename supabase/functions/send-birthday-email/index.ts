@@ -178,39 +178,46 @@ serve(async (req) => {
             `;
         }).join('');
 
-        const emailHtml = `
-      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #ec1313;">🎂 Aniversariantes de Hoje! (` + today.toLocaleDateString('pt-BR') + `)</h1>
-        <p>Olá Admin,</p>
-        <p>Hoje é um dia especial! Aqui está a lista de aniversariantes:</p>
-        <ul style="list-style: none; padding: 0;">
-            ${listHtml}
-        </ul>
-        <br/>
-        <a href="https://aniversarios-app.vercel.app" style="background-color: #ec1313; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Abrir App</a>
-      </div>
-    `;
+        // 6. Send Email via Resend (Loop to personalize)
+        console.log("Sending email via Resend to admins:", adminEmails);
 
-        // 6. Send Email via Resend
-        console.log("Sending email via Resend...");
-        const res = await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${RESEND_API_KEY}`,
-            },
-            body: JSON.stringify({
-                from: 'Aniversários <onboarding@resend.dev>', // Default testing domain
-                to: adminEmails,
-                subject: `🎉 ${todaysBirthdays.length} Aniversariante(s) Hoje!`,
-                html: emailHtml,
-            }),
+        const emailPromises = adminEmails.map(async (email: string) => {
+            const personalizedHtml = `
+              <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+                <h1 style="color: #ec1313;">🎂 Aniversariantes de Hoje! (` + today.toLocaleDateString('pt-BR') + `)</h1>
+                <p>Olá ${email},</p>
+                <p>Hoje é um dia especial! Aqui está a lista de aniversariantes:</p>
+                <ul style="list-style: none; padding: 0;">
+                    ${listHtml}
+                </ul>
+                <br/>
+                <a href="https://aniversarios-app.vercel.app" style="background-color: #ec1313; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Abrir App</a>
+              </div>
+            `;
+
+            const res = await fetch('https://api.resend.com/emails', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${RESEND_API_KEY}`,
+                },
+                body: JSON.stringify({
+                    from: 'Aniversários <onboarding@resend.dev>', // Default testing domain
+                    to: [email], // Send individually
+                    subject: `🎉 ${todaysBirthdays.length} Aniversariante(s) Hoje!`,
+                    html: personalizedHtml,
+                }),
+            });
+            return res.json();
         });
 
-        const data = await res.json();
-        console.log("Resend response:", data);
+        const results = await Promise.all(emailPromises);
+        console.log("Resend responses:", results);
 
-        return new Response(JSON.stringify(data), {
+        return new Response(JSON.stringify({
+            message: "Emails sent",
+            results: results
+        }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             status: 200,
         });
