@@ -44,7 +44,23 @@ const Home: React.FC = () => {
 
   // Filter for Search
   const filteredBirthdays = searchTerm
-    ? sortedBirthdays.filter(b => b.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    ? sortedBirthdays.filter(b => {
+      const lowerTerm = searchTerm.toLowerCase();
+      const birthDate = b.date; // YYYY-MM-DD
+
+      // Match Name
+      if (b.name.toLowerCase().includes(lowerTerm)) return true;
+
+      // Match Date (DD/MM)
+      const dateFormatted = getDayMonth(birthDate); // e.g. "15/05"
+      if (dateFormatted.includes(lowerTerm)) return true;
+
+      // Match Month Name (e.g. "Maio", "mai")
+      const monthName = getMonthName(birthDate).toLowerCase();
+      if (monthName.includes(lowerTerm)) return true;
+
+      return false;
+    })
     : [];
 
   /* Drag to Scroll Logic */
