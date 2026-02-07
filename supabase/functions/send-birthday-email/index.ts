@@ -142,13 +142,41 @@ serve(async (req) => {
         }
 
         // 5. Construct Email HTML
-        const listHtml = todaysBirthdays.map((b: any) => `
-        <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
-            <strong style="font-size: 16px; color: #333;">${b.name}</strong>
-            <br/>
-            <span style="color: #666; font-size: 14px;">Telefone: ${b.phone || 'N/A'}</span>
-        </li>
-    `).join('');
+        const listHtml = todaysBirthdays.map((b: any) => {
+            let phoneHtml = 'Telefone: N/A';
+
+            if (b.phone) {
+                // Remove non-digits
+                const rawPhone = b.phone.replace(/\D/g, '');
+                let formattedPhone = b.phone;
+                let waLink = `https://wa.me/${rawPhone}`;
+
+                // Format: 5511999999999 -> (11) 99999-9999
+                if (rawPhone.startsWith('55') && rawPhone.length === 13) {
+                    formattedPhone = `(${rawPhone.substring(2, 4)}) ${rawPhone.substring(4, 9)}-${rawPhone.substring(9)}`;
+                } else if (rawPhone.startsWith('55') && rawPhone.length === 12) {
+                    formattedPhone = `(${rawPhone.substring(2, 4)}) ${rawPhone.substring(4, 8)}-${rawPhone.substring(8)}`;
+                }
+
+                phoneHtml = `
+                    <span style="color: #666; font-size: 14px;">
+                        Telefone: <strong>${formattedPhone}</strong>
+                    </span>
+                    <br/>
+                    <a href="${waLink}" style="display: inline-block; margin-top: 5px; color: #25D366; text-decoration: none; font-weight: bold; font-size: 14px;">
+                        📲 Enviar WhatsApp
+                    </a>
+                `;
+            }
+
+            return `
+            <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                <strong style="font-size: 16px; color: #333;">${b.name}</strong>
+                <br/>
+                ${phoneHtml}
+            </li>
+            `;
+        }).join('');
 
         const emailHtml = `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
