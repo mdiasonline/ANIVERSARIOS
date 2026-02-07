@@ -77,13 +77,9 @@ const Home: React.FC = () => {
   return (
     <div className="flex flex-col h-full bg-background-light dark:bg-background-dark pb-6">
       {/* Header */}
-      <div className="sticky top-0 z-40 flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between border-b border-gray-100 dark:border-gray-800 relative">
-        <div className="flex items-center gap-2 ml-1 z-10 w-10">
-          {/* Spacer or Back button if needed, otherwise empty to balance layout */}
-        </div>
-
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-4">
-          <img src="/assets/cake_slice.svg" alt="Bolo" className="h-14 w-auto object-contain pb-2" />
+      <div className="sticky top-0 z-40 flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between border-b border-gray-100 dark:border-gray-800">
+        <div className="flex items-center gap-3">
+          <img src="/assets/cake_candle.svg" alt="Bolo" className="h-10 w-auto object-contain" />
           <h2 className="text-[#1a1a1a] dark:text-white text-3xl font-black leading-none tracking-tight uppercase">
             ANIVERSÁRIOS
           </h2>
