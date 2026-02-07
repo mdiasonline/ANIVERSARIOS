@@ -16,10 +16,38 @@ serve(async (req) => {
     try {
         console.log("Starting birthday check...");
 
-        // 1. Initialize Supabase Client
+        // 0. Manual Auth Verification (since verify_jwt is off or failing)
+        const authHeader = req.headers.get('Authorization');
+        if (!authHeader) {
+            console.error("Missing Authorization header.");
+            return new Response(JSON.stringify({ error: "Missing Authorization header" }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                status: 401,
+            });
+        }
+
+        // Create a client to verify the user
+        const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+        const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+        const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+            global: { headers: { Authorization: authHeader } },
+        });
+
+        const { data: { user }, error: userError } = await authClient.auth.getUser();
+
+        if (userError || !user) {
+            console.error("Invalid user token:", userError);
+            return new Response(JSON.stringify({ error: "Unauthorized: Invalid Token" }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                status: 401,
+            });
+        }
+
+        console.log(`User authenticated: ${user.email} (${user.id})`);
+
+        // 1. Initialize Supabase Admin Client (for operations)
         const supabaseClient = createClient(
-            // Access environment variables provided by Supabase Edge Runtime
-            Deno.env.get('SUPABASE_URL') ?? '',
+            supabaseUrl,
             Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
         );
 
