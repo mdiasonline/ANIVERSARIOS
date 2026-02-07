@@ -62,6 +62,7 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, onSuccess })
                         const date = normalizeKey(row, 'data') || normalizeKey(row, 'date') || normalizeKey(row, 'aniversario') || normalizeKey(row, 'nascimento');
                         const phone = normalizeKey(row, 'telefone') || normalizeKey(row, 'celular') || normalizeKey(row, 'phone') || '';
                         const email = normalizeKey(row, 'email') || normalizeKey(row, 'e-mail') || '';
+                        const photo_url = normalizeKey(row, 'foto') || normalizeKey(row, 'photo') || normalizeKey(row, 'avatar') || normalizeKey(row, 'img') || '';
 
                         if (!name || !date) {
                             errorCount++;
@@ -81,6 +82,7 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, onSuccess })
                                     date: `${match[3]}-${match[2]}-${match[1]}`, // Convert to YYYY-MM-DD
                                     phone,
                                     email,
+                                    photo_url,
                                     created_by: user.id
                                 });
                                 successCount++;
@@ -94,6 +96,7 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, onSuccess })
                                 date,
                                 phone,
                                 email,
+                                photo_url,
                                 created_by: user.id
                             });
                             successCount++;
@@ -158,12 +161,12 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, onSuccess })
                             Formato Obrigatório
                         </h4>
                         <p className="text-xs text-blue-600 dark:text-blue-400 mb-2">
-                            O arquivo deve ter um cabeçalho com as colunas: <strong>nome, data, telefone, email</strong>.
+                            O arquivo deve ter um cabeçalho com as colunas: <strong>nome, data, telefone, email, foto</strong>.
                         </p>
                         <div className="bg-white dark:bg-black/20 p-2 rounded border border-blue-200 dark:border-blue-800 font-mono text-[10px] text-gray-600 dark:text-gray-400">
-                            nome,data,telefone,email<br />
-                            João Silva,1990-12-31,11999999999,joao@email.com<br />
-                            Maria Souza,1985-05-20,21988888888, maria@email.com
+                            nome,data,telefone,email,foto<br />
+                            João Silva,31/12/1990,11999999999,joao@email.com,https://...<br />
+                            Maria Souza,20/05/1985,21988888888, maria@email.com,
                         </div>
                         <p className="text-[10px] text-blue-500 dark:text-blue-400 mt-2">
                             * Data deve ser AAAA-MM-DD ou DD/MM/AAAA.
