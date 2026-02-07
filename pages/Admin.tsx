@@ -114,6 +114,44 @@ const Admin: React.FC = () => {
         });
     };
 
+    const handleTriggerEmail = async () => {
+        setLoading(true);
+        try {
+            const { data, error } = await supabase.functions.invoke('send-birthday-email');
+
+            if (error) throw error;
+
+            console.log("Email output:", data);
+
+            let message = 'E-mail disparado com sucesso!';
+            if (data?.message === "No birthdays today.") {
+                message = 'O sistema verificou e **não há aniversariantes hoje**. Nenhum e-mail foi enviado.';
+            } else if (data?.id) {
+                message = 'E-mail enviado para os administradores com a lista de hoje!';
+            }
+
+            showConfirm({
+                title: 'Disparo Manual',
+                message: message,
+                confirmLabel: 'OK',
+                onConfirm: hideConfirm,
+                variant: 'info'
+            });
+
+        } catch (error: any) {
+            console.error('Error triggering email:', error);
+            showConfirm({
+                title: 'Erro',
+                message: 'Falha ao disparar e-mail: ' + (error.message || 'Erro desconhecido'),
+                confirmLabel: 'OK',
+                onConfirm: hideConfirm,
+                variant: 'danger'
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="flex flex-col min-h-screen font-display bg-background-light dark:bg-background-dark">
             {/* Header */}
@@ -134,12 +172,22 @@ const Admin: React.FC = () => {
                     </h2>
                 </div>
 
-                <div
-                    onClick={() => setShowImportModal(true)}
-                    className="flex size-12 shrink-0 items-center justify-center cursor-pointer group rounded-full hover:bg-primary/5 transition-colors"
-                    title="Importar CSV"
-                >
-                    <span className="material-symbols-outlined text-primary text-xl">upload_file</span>
+                <div className="flex items-center gap-2">
+                    <div
+                        onClick={handleTriggerEmail}
+                        className="flex size-10 shrink-0 items-center justify-center cursor-pointer group rounded-full hover:bg-primary/5 transition-colors"
+                        title="Disparar E-mail Agora"
+                    >
+                        <span className="material-symbols-outlined text-primary text-xl">send</span>
+                    </div>
+
+                    <div
+                        onClick={() => setShowImportModal(true)}
+                        className="flex size-10 shrink-0 items-center justify-center cursor-pointer group rounded-full hover:bg-primary/5 transition-colors"
+                        title="Importar CSV"
+                    >
+                        <span className="material-symbols-outlined text-primary text-xl">upload_file</span>
+                    </div>
                 </div>
             </header>
 

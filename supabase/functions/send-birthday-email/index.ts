@@ -14,6 +14,8 @@ serve(async (req) => {
     }
 
     try {
+        console.log("Starting birthday check...");
+
         // 1. Initialize Supabase Client
         const supabaseClient = createClient(
             // Access environment variables provided by Supabase Edge Runtime
@@ -26,12 +28,18 @@ serve(async (req) => {
             .from('birthdays')
             .select('*');
 
-        if (birthdaysError) throw birthdaysError;
+        if (birthdaysError) {
+            console.error("Error fetching birthdays:", birthdaysError);
+            throw birthdaysError;
+        }
+
+        console.log(`Fetched ${birthdays.length} total birthdays.`);
 
         // 3. Filter for Today
         const today = new Date();
         const currentMonth = today.getMonth() + 1; // 0-indexed
         const currentDay = today.getDate();
+        console.log(`Checking for date: ${currentDay}/${currentMonth}`);
 
         const todaysBirthdays = birthdays.filter((b: any) => {
             // Handle YYYY-MM-DD or DD/MM/YYYY or similar
@@ -55,8 +63,23 @@ serve(async (req) => {
             return bMonth === currentMonth && bDay === currentDay;
         });
 
+        console.log(`Found ${todaysBirthdays.length} birthdays today.`);
+
+        const debugInfo = {
+            totalBirthdays: birthdays.length,
+            currentDate: `${currentDay}/${currentMonth}`,
+            todaysBirthdaysCount: todaysBirthdays.length,
+            // Sample of first few birthdays for debugging date parsing
+            sampleBirthdays: birthdays.slice(0, 3).map((b: any) => b.date),
+        };
+        console.log("Debug Info:", debugInfo);
+
         if (todaysBirthdays.length === 0) {
-            return new Response(JSON.stringify({ message: "No birthdays today." }), {
+            console.log("No birthdays today. Exiting.");
+            return new Response(JSON.stringify({
+                message: "No birthdays today.",
+                debug: debugInfo
+            }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
                 status: 200,
             });
@@ -65,16 +88,22 @@ serve(async (req) => {
         // 4. Fetch Admins
         const { data: profiles, error: profilesError } = await supabaseClient
             .from('user_profiles')
-            .select('email')
+            .select('email, role')
             .eq('role', 'admin');
 
-        if (profilesError) throw profilesError;
+        if (profilesError) {
+            console.error("Error fetching admins:", profilesError);
+            throw profilesError;
+        }
 
         const adminEmails = profiles
             .map((p: any) => p.email)
             .filter((email: any) => email && email.includes('@')); // Basic validation
 
+        console.log(`Found ${adminEmails.length} admin emails:`, adminEmails);
+
         if (adminEmails.length === 0) {
+            console.log("No valid admin emails found. Exiting.");
             return new Response(JSON.stringify({ message: "No admins found to email." }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
                 status: 200,
@@ -104,6 +133,7 @@ serve(async (req) => {
     `;
 
         // 6. Send Email via Resend
+        console.log("Sending email via Resend...");
         const res = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
@@ -119,6 +149,7 @@ serve(async (req) => {
         });
 
         const data = await res.json();
+        console.log("Resend response:", data);
 
         return new Response(JSON.stringify(data), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -126,6 +157,7 @@ serve(async (req) => {
         });
 
     } catch (error) {
+        console.error("Unhandled error:", error);
         return new Response(JSON.stringify({ error: error.message }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             status: 400,
