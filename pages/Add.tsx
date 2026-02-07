@@ -161,6 +161,17 @@ const Add: React.FC<AddProps> = ({ isEditing = false }) => {
 
     const fullPhone = `${ddi}${formData.phone.replace(/\D/g, '')}`;
 
+    // Auto-Capitalize Name (Title Case) with Portuguese exceptions
+    const exceptions = ['da', 'de', 'do', 'das', 'dos', 'e'];
+    const formattedName = formData.name
+      .toLowerCase()
+      .split(' ')
+      .map((word, index) => {
+        if (index > 0 && exceptions.includes(word)) return word;
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(' ');
+
     const newErrors: typeof errors = {};
     if (!formData.name.trim()) newErrors.name = 'Nome é obrigatório.';
     if (!validateDate(formData.date)) newErrors.date = 'Data inválida. Use DD/MM/AAAA.';
@@ -190,7 +201,7 @@ const Add: React.FC<AddProps> = ({ isEditing = false }) => {
     if (isEditing && selectedBirthday) {
       // UPDATE MODE
       const updates: Partial<Birthday> = {
-        name: formData.name,
+        name: formattedName,
         date: isoDate,
         phone: fullPhone,
         email: formData.email,
@@ -205,7 +216,7 @@ const Add: React.FC<AddProps> = ({ isEditing = false }) => {
     } else {
       // CREATE MODE
       const newBirthday: Omit<Birthday, 'id'> = {
-        name: formData.name,
+        name: formattedName,
         date: isoDate,
         phone: fullPhone,
         email: formData.email,
