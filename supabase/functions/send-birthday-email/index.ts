@@ -37,9 +37,12 @@ serve(async (req) => {
 
         if (userError || !user) {
             console.error("Invalid user token:", userError);
-            return new Response(JSON.stringify({ error: "Unauthorized: Invalid Token" }), {
+            return new Response(JSON.stringify({
+                error: `Auth failed: ${userError?.message || 'Unknown error'}`,
+                details: userError
+            }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                status: 401,
+                status: 200, // Return 200 to allow client to read the error message
             });
         }
 

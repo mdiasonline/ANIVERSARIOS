@@ -123,6 +123,10 @@ const Admin: React.FC = () => {
 
             console.log("Email output:", data);
 
+            if (data?.error) {
+                throw new Error(data.error);
+            }
+
             let message = 'E-mail disparado com sucesso!';
             if (data?.message === "No birthdays today.") {
                 message = 'O sistema verificou e **não há aniversariantes hoje**. Nenhum e-mail foi enviado.';
