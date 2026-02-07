@@ -232,6 +232,50 @@ const App: React.FC = () => {
     }
   }, [birthdays, selectedBirthday]);
 
+  // History Management
+  const isPopping = React.useRef(false);
+
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      // If state exists, go there. If not, default to HOME (unless we are at home, then maybe allow exit? browser handles exit if stack empty)
+      const nextView = event.state?.view || 'HOME';
+      // Prevent pushState loop
+      isPopping.current = true;
+      setCurrentView(nextView);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    if (isPopping.current) {
+      isPopping.current = false;
+      return;
+    }
+
+    if (currentView === 'AUTH') {
+      // Do not push state for AUTH, maybe replace?
+      window.history.replaceState({ view: 'AUTH' }, '');
+      return;
+    }
+
+    // Special case: If coming from Auth to Home (login), replace state to avoid "Back to Login"
+    // However, we don't strictly know if we just logged in here without extra state.
+    // Heuristic: If history state is empty or AUTH, and we go to HOME, replace.
+    // A simpler approach: Always push, except on initial load/auth?
+
+    // Let's rely on session restoration logic. 
+    // If we are just starting up, usually we want to replace the current "blank" entry with the current view.
+    // Use a 'isFirstLoad' ref? 
+    // Actually, just standard pushState works well for SPA navigation.
+    // But we want to avoid "Back" -> "Login".
+
+    // Standard approach:
+    window.history.pushState({ view: currentView }, '');
+
+  }, [currentView]);
+
   // Persist currentView and selectedBirthday whenever they change
   useEffect(() => {
     if (currentView !== 'AUTH') {
