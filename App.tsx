@@ -178,24 +178,39 @@ const App: React.FC = () => {
     // Listen for changes on auth state (logged in, signed out, etc.)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session) {
-        // Fetch user profile for avatar
-        const { data: profile } = await supabase
-          .from('user_profiles')
-          .select('avatar_url, role')
-          .eq('id', session.user.id)
-          .single();
-
-        setUser({
+        // 1. Set minimal user immediately to unblock UI
+        const basicUser: User = {
           id: session.user.id,
           name: session.user.user_metadata.name || session.user.email?.split('@')[0] || 'Usuário',
           email: session.user.email || '',
-          avatar: profile?.avatar_url || session.user.user_metadata.avatar_url,
-          role: profile?.role as 'user' | 'admin' || 'user',
-        });
+          avatar: session.user.user_metadata.avatar_url,
+          role: 'user' // Default to user, update later
+        };
+        setUser(basicUser);
 
-        // Only switch to HOME if we are currently on AUTH
+        // 2. Navigate immediately (Optimistic UI)
         setCurrentView(prev => (prev === 'AUTH' ? 'HOME' : prev));
+
+        // 3. Kick off data fetching in parallel
         fetchBirthdays();
+
+        // 4. Fetch full profile (avatar/role) in background
+        supabase
+          .from('user_profiles')
+          .select('avatar_url, role')
+          .eq('id', session.user.id)
+          .single()
+          .then(({ data: profile }) => {
+            if (profile) {
+              setUser(prev => prev ? ({
+                ...prev,
+                avatar: profile.avatar_url || prev.avatar,
+                role: (profile.role as 'user' | 'admin') || prev.role
+              }) : null);
+            }
+          })
+          .catch(err => console.error('Error fetching profile:', err));
+
       } else {
         setUser(null);
         setCurrentView('AUTH');
