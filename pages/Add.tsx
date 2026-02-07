@@ -192,7 +192,7 @@ const Add: React.FC<AddProps> = ({ isEditing = false }) => {
       const updates: Partial<Birthday> = {
         name: formData.name,
         date: isoDate,
-        phone: formData.phone,
+        phone: fullPhone,
         email: formData.email,
         photo_url: photo_url || undefined
       };
@@ -207,7 +207,7 @@ const Add: React.FC<AddProps> = ({ isEditing = false }) => {
       const newBirthday: Omit<Birthday, 'id'> = {
         name: formData.name,
         date: isoDate,
-        phone: formData.phone,
+        phone: fullPhone,
         email: formData.email,
         photo_url: photo_url || undefined
       };
