@@ -1,6 +1,6 @@
 import React from 'react';
 import { Birthday } from '../types';
-import { getDayMonth, getDaysRemaining, getMonthName, getDayNumber, calculateAge } from '../utils';
+import { getDayMonth, getDaysRemaining, getMonthName, getDayNumber, calculateAge, formatPhone } from '../utils';
 import { useAppContext } from '../App';
 
 interface BirthdayListItemProps {
@@ -87,7 +87,7 @@ const BirthdayListItem: React.FC<BirthdayListItemProps> = ({ birthday, variant =
                             className="flex items-center gap-2 text-sm text-gray-600 dark:text-zinc-400 hover:text-primary transition-colors"
                         >
                             <span className="material-symbols-outlined text-sm text-primary">call</span>
-                            <span>{birthday.phone}</span>
+                            <span>{formatPhone(birthday.phone)}</span>
                         </a>
                         <button
                             onClick={(e) => {

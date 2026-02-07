@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppContext } from '../App';
-import { getDayMonth, getDaysRemaining, getMonthName, getDayNumber, calculateAge } from '../utils';
+import { getDayMonth, getDaysRemaining, getMonthName, getDayNumber, calculateAge, formatPhone } from '../utils';
 
 const Details: React.FC = () => {
     const { selectedBirthday, setCurrentView, deleteBirthday, showConfirm, user, showShareModal } = useAppContext();
@@ -137,7 +137,7 @@ const Details: React.FC = () => {
                             </div>
                             <div className="flex-1">
                                 <p className="text-[#1a1a1a]/40 dark:text-white/40 text-[10px] font-bold uppercase">Telefone</p>
-                                <p className="text-[#1a1a1a] dark:text-white font-bold">{selectedBirthday.phone}</p>
+                                <p className="text-[#1a1a1a] dark:text-white font-bold">{formatPhone(selectedBirthday.phone)}</p>
                             </div>
                         </div>
                     )}
