@@ -9,6 +9,10 @@ const Home: React.FC = () => {
   const { user, setCurrentView, birthdays, setSelectedBirthday } = useAppContext();
   const [viewingDate, setViewingDate] = React.useState(new Date());
 
+  // Search State
+  const [showSearch, setShowSearch] = React.useState(false);
+  const [searchTerm, setSearchTerm] = React.useState('');
+
   const goToNextMonth = () => {
     setViewingDate(prev => {
       const next = new Date(prev);
@@ -37,6 +41,11 @@ const Home: React.FC = () => {
   });
 
   const upcomingBirthdays = sortedBirthdays.slice(0, 5); // Show first 5 closest
+
+  // Filter for Search
+  const filteredBirthdays = searchTerm
+    ? sortedBirthdays.filter(b => b.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    : [];
 
   /* Drag to Scroll Logic */
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
@@ -78,153 +87,232 @@ const Home: React.FC = () => {
     <div className="flex flex-col h-full bg-background-light dark:bg-background-dark pb-6">
       {/* Header */}
       <div className="sticky top-0 z-40 flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between border-b border-gray-100 dark:border-gray-800">
-        <div className="flex items-center gap-3">
-          <img src="/assets/cake_candle.svg" alt="Bolo" className="h-10 w-auto object-contain" />
-          <h2 className="text-[#1a1a1a] dark:text-white text-3xl font-black leading-none tracking-tight uppercase">
-            ANIVERSÁRIOS
-          </h2>
-        </div>
-        <div className="flex gap-2 items-center justify-end">
-          <button
-            onClick={() => supabase.auth.signOut()}
-            className="flex cursor-pointer items-center justify-center rounded-lg h-10 w-10 bg-transparent text-gray-400 hover:text-primary hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
-            title="Sair"
-          >
-            <span className="material-symbols-outlined">logout</span>
-          </button>
-          <button className="flex cursor-pointer items-center justify-center rounded-lg h-10 w-10 bg-transparent text-[#1a1a1a] dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-            <span className="material-symbols-outlined">search</span>
-          </button>
-        </div>
+
+        {showSearch ? (
+          /* Search Header */
+          <div className="flex items-center w-full gap-3 animate-fade-in">
+            <button
+              onClick={() => {
+                setShowSearch(false);
+                setSearchTerm('');
+              }}
+              className="flex items-center justify-center size-10 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 transition-colors"
+            >
+              <span className="material-symbols-outlined">arrow_back</span>
+            </button>
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                autoFocus
+                placeholder="Buscar aniversariante..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full h-10 pl-4 pr-10 rounded-xl bg-gray-100 dark:bg-white/5 border-none outline-none text-[#1a1a1a] dark:text-white placeholder-gray-400"
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <span className="material-symbols-outlined text-lg">close</span>
+                </button>
+              )}
+            </div>
+          </div>
+        ) : (
+          /* Standard Header */
+          <>
+            <div className="flex items-center gap-3">
+              <img src="/assets/cake_candle.svg" alt="Bolo" className="h-10 w-auto object-contain" />
+              <h2 className="text-[#1a1a1a] dark:text-white text-3xl font-black leading-none tracking-tight uppercase">
+                ANIVERSÁRIOS
+              </h2>
+            </div>
+            <div className="flex gap-2 items-center justify-end">
+              <button
+                onClick={() => supabase.auth.signOut()}
+                className="flex cursor-pointer items-center justify-center rounded-lg h-10 w-10 bg-transparent text-gray-400 hover:text-primary hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+                title="Sair"
+              >
+                <span className="material-symbols-outlined">logout</span>
+              </button>
+              <button
+                onClick={() => setShowSearch(true)}
+                className="flex cursor-pointer items-center justify-center rounded-lg h-10 w-10 bg-transparent text-[#1a1a1a] dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+              >
+                <span className="material-symbols-outlined">search</span>
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
       <main className="flex flex-col">
-        {/* Welcome */}
-        <div className="px-4 pt-6 pb-2">
-          <h1 className="text-[#1a1a1a] dark:text-white tracking-tight text-[32px] font-extrabold leading-tight">
-            Olá, {user?.name || 'Visitante'}! 👋
-          </h1>
-          <p className="text-[#6b7280] dark:text-gray-400 text-base font-medium mt-1">
-            Não esqueça de celebrar hoje.
-          </p>
-        </div>
-
-        {/* Buttons */}
-        <div className="flex justify-stretch py-4">
-          <div className="flex flex-1 gap-3 px-4 justify-between">
-            <button
-              onClick={() => setCurrentView('ADD')}
-              className="flex flex-1 min-w-[120px] cursor-pointer items-center justify-center gap-2 rounded-xl h-14 bg-primary text-white text-base font-bold transition-transform active:scale-95 shadow-lg shadow-primary/20 hover:bg-primary-hover"
-            >
-              <span className="material-symbols-outlined text-xl">add_circle</span>
-              <span className="truncate">Cadastrar</span>
-            </button>
-            <button
-              onClick={() => setCurrentView('LIST')}
-              className="flex flex-1 min-w-[120px] cursor-pointer items-center justify-center gap-2 rounded-xl h-14 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary text-base font-bold transition-transform active:scale-95 border border-primary/10 hover:bg-primary/20"
-            >
-              <span className="material-symbols-outlined text-xl">calendar_month</span>
-              <span className="truncate">Ver Todos</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Horizontal Scroll */}
-        <div className="flex items-center justify-between px-4 pt-6 pb-3">
-          <h2 className="text-[#1a1a1a] dark:text-white text-[20px] font-bold leading-tight tracking-tight">
-            Aniversários de {viewingDate.toLocaleString('pt-BR', { month: 'long' })}
-          </h2>
-          <div className="flex items-center gap-1">
-            <button
-              onClick={goToPrevMonth}
-              className="size-8 flex items-center justify-center text-primary rounded-full hover:bg-primary/10 transition-colors"
-            >
-              <span className="material-symbols-outlined text-xl">chevron_left</span>
-            </button>
-            <button
-              onClick={goToNextMonth}
-              className="size-8 flex items-center justify-center text-primary rounded-full hover:bg-primary/10 transition-colors"
-            >
-              <span className="material-symbols-outlined text-xl">chevron_right</span>
-            </button>
-          </div>
-        </div>
-
-        <div
-          ref={scrollContainerRef}
-          onMouseDown={handleMouseDown}
-          onMouseLeave={handleMouseLeave}
-          onMouseUp={handleMouseUp}
-          onMouseMove={handleMouseMove}
-          className={`overflow-x-auto flex gap-4 px-4 pb-8 hide-scrollbar ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
-        >
-          {thisMonthBirthdays.map((birthday) => (
-            <div
-              key={birthday.id}
-              onClick={(e) => {
-                if (hasMoved) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  return;
-                }
-                setSelectedBirthday(birthday);
-                setCurrentView('DETAILS');
-              }}
-              draggable={false} // Prevent native drag
-              className="min-w-[140px] flex-shrink-0 bg-white dark:bg-[#2a2a2a] p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 flex flex-col items-center text-center hover:shadow-md transition-shadow select-none"
-            >
-              <div className="relative mb-3">
-                {birthday.photo_url ? (
-                  <div
-                    className="w-16 h-16 rounded-full bg-cover bg-center border-2 border-primary/10"
-                    style={{ backgroundImage: `url("${birthday.photo_url}")` }}
-                  ></div>
-                ) : (
-                  <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center border-2 border-primary/10">
-                    <span className="text-primary font-bold text-xl">{birthday.name.substring(0, 2).toUpperCase()}</span>
-                  </div>
-                )}
-                {getDaysRemaining(birthday.date) === 0 && (
-                  <div className="absolute -bottom-1 -right-1 bg-primary text-white rounded-full p-1 border-2 border-white dark:border-[#2a2a2a]">
-                    <span className="material-symbols-outlined text-[12px] block font-bold">cake</span>
-                  </div>
-                )}
+        {showSearch ? (
+          /* Search Results */
+          <div className="px-4 pt-4">
+            {searchTerm ? (
+              <>
+                <p className="text-gray-500 mb-4 text-sm">
+                  Encontrados: {filteredBirthdays.length}
+                </p>
+                <div className="space-y-3 pb-24">
+                  {filteredBirthdays.map(birthday => (
+                    <BirthdayListItem
+                      key={birthday.id}
+                      birthday={birthday}
+                      variant="home"
+                      onClick={() => {
+                        setSelectedBirthday(birthday);
+                        setCurrentView('DETAILS');
+                      }}
+                    />
+                  ))}
+                  {filteredBirthdays.length === 0 && (
+                    <div className="text-center py-10 text-gray-400">
+                      Nenhum resultado para "{searchTerm}"
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-20 text-gray-300">
+                <span className="material-symbols-outlined text-4xl mb-2">search</span>
+                <p>Digite um nome para buscar</p>
               </div>
-              <h3 className="text-[#1a1a1a] dark:text-white font-bold text-sm truncate w-full">
-                {birthday.name}
-              </h3>
-              <p className="text-primary font-bold text-xs mt-1">{getDayMonth(birthday.date)}</p>
-              <p className="text-gray-400 text-[10px] uppercase font-bold mt-1">
-                {getDaysRemaining(birthday.date) === 0 ? "Hoje!" : `Faltam ${getDaysRemaining(birthday.date)} dias`}
+            )}
+          </div>
+        ) : (
+          /* Normal Home Content */
+          <>
+            {/* Welcome */}
+            <div className="px-4 pt-6 pb-2">
+              <h1 className="text-[#1a1a1a] dark:text-white tracking-tight text-[32px] font-extrabold leading-tight">
+                Olá, {user?.name || 'Visitante'}! 👋
+              </h1>
+              <p className="text-[#6b7280] dark:text-gray-400 text-base font-medium mt-1">
+                Não esqueça de celebrar hoje.
               </p>
             </div>
-          ))}
-          {thisMonthBirthdays.length === 0 && (
-            <div className="w-full text-center text-gray-400 py-4 text-sm">
-              Nenhum aniversário próximo.
-            </div>
-          )}
-        </div>
 
-        {/* Vertical List */}
-        <div className="px-4 pt-4">
-          <h2 className="text-[#1a1a1a] dark:text-white text-[18px] font-bold leading-tight mb-4">
-            Próximos em breve
-          </h2>
-          <div className="space-y-3 pb-24">
-            {upcomingBirthdays.map((birthday) => (
-              <BirthdayListItem
-                key={birthday.id}
-                birthday={birthday}
-                variant="home"
-                onClick={() => {
-                  setSelectedBirthday(birthday);
-                  setCurrentView('DETAILS');
-                }}
-              />
-            ))}
-          </div>
-        </div>
+            {/* Buttons */}
+            <div className="flex justify-stretch py-4">
+              <div className="flex flex-1 gap-3 px-4 justify-between">
+                <button
+                  onClick={() => setCurrentView('ADD')}
+                  className="flex flex-1 min-w-[120px] cursor-pointer items-center justify-center gap-2 rounded-xl h-14 bg-primary text-white text-base font-bold transition-transform active:scale-95 shadow-lg shadow-primary/20 hover:bg-primary-hover"
+                >
+                  <span className="material-symbols-outlined text-xl">add_circle</span>
+                  <span className="truncate">Cadastrar</span>
+                </button>
+                <button
+                  onClick={() => setCurrentView('LIST')}
+                  className="flex flex-1 min-w-[120px] cursor-pointer items-center justify-center gap-2 rounded-xl h-14 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary text-base font-bold transition-transform active:scale-95 border border-primary/10 hover:bg-primary/20"
+                >
+                  <span className="material-symbols-outlined text-xl">calendar_month</span>
+                  <span className="truncate">Ver Todos</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Horizontal Scroll */}
+            <div className="flex items-center justify-between px-4 pt-6 pb-3">
+              <h2 className="text-[#1a1a1a] dark:text-white text-[20px] font-bold leading-tight tracking-tight">
+                Aniversários de {viewingDate.toLocaleString('pt-BR', { month: 'long' })}
+              </h2>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={goToPrevMonth}
+                  className="size-8 flex items-center justify-center text-primary rounded-full hover:bg-primary/10 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-xl">chevron_left</span>
+                </button>
+                <button
+                  onClick={goToNextMonth}
+                  className="size-8 flex items-center justify-center text-primary rounded-full hover:bg-primary/10 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-xl">chevron_right</span>
+                </button>
+              </div>
+            </div>
+
+            <div
+              ref={scrollContainerRef}
+              onMouseDown={handleMouseDown}
+              onMouseLeave={handleMouseLeave}
+              onMouseUp={handleMouseUp}
+              onMouseMove={handleMouseMove}
+              className={`overflow-x-auto flex gap-4 px-4 pb-8 hide-scrollbar ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+            >
+              {thisMonthBirthdays.map((birthday) => (
+                <div
+                  key={birthday.id}
+                  onClick={(e) => {
+                    if (hasMoved) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      return;
+                    }
+                    setSelectedBirthday(birthday);
+                    setCurrentView('DETAILS');
+                  }}
+                  draggable={false} // Prevent native drag
+                  className="min-w-[140px] flex-shrink-0 bg-white dark:bg-[#2a2a2a] p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 flex flex-col items-center text-center hover:shadow-md transition-shadow select-none"
+                >
+                  <div className="relative mb-3">
+                    {birthday.photo_url ? (
+                      <div
+                        className="w-16 h-16 rounded-full bg-cover bg-center border-2 border-primary/10"
+                        style={{ backgroundImage: `url("${birthday.photo_url}")` }}
+                      ></div>
+                    ) : (
+                      <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center border-2 border-primary/10">
+                        <span className="text-primary font-bold text-xl">{birthday.name.substring(0, 2).toUpperCase()}</span>
+                      </div>
+                    )}
+                    {getDaysRemaining(birthday.date) === 0 && (
+                      <div className="absolute -bottom-1 -right-1 bg-primary text-white rounded-full p-1 border-2 border-white dark:border-[#2a2a2a]">
+                        <span className="material-symbols-outlined text-[12px] block font-bold">cake</span>
+                      </div>
+                    )}
+                  </div>
+                  <h3 className="text-[#1a1a1a] dark:text-white font-bold text-sm truncate w-full">
+                    {birthday.name}
+                  </h3>
+                  <p className="text-primary font-bold text-xs mt-1">{getDayMonth(birthday.date)}</p>
+                  <p className="text-gray-400 text-[10px] uppercase font-bold mt-1">
+                    {getDaysRemaining(birthday.date) === 0 ? "Hoje!" : `Faltam ${getDaysRemaining(birthday.date)} dias`}
+                  </p>
+                </div>
+              ))}
+              {thisMonthBirthdays.length === 0 && (
+                <div className="w-full text-center text-gray-400 py-4 text-sm">
+                  Nenhum aniversário próximo.
+                </div>
+              )}
+            </div>
+
+            {/* Vertical List */}
+            <div className="px-4 pt-4">
+              <h2 className="text-[#1a1a1a] dark:text-white text-[18px] font-bold leading-tight mb-4">
+                Próximos em breve
+              </h2>
+              <div className="space-y-3 pb-24">
+                {upcomingBirthdays.map((birthday) => (
+                  <BirthdayListItem
+                    key={birthday.id}
+                    birthday={birthday}
+                    variant="home"
+                    onClick={() => {
+                      setSelectedBirthday(birthday);
+                      setCurrentView('DETAILS');
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </main>
     </div>
   );
