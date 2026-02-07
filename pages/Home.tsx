@@ -82,8 +82,8 @@ const Home: React.FC = () => {
           {/* Spacer or Back button if needed, otherwise empty to balance layout */}
         </div>
 
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-3">
-          <img src="/assets/cake_slice_red.png" alt="Bolo" className="h-8 w-auto object-contain" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-4">
+          <img src="/assets/cake_slice.svg" alt="Bolo" className="h-14 w-auto object-contain pb-2" />
           <h2 className="text-[#1a1a1a] dark:text-white text-3xl font-black leading-none tracking-tight uppercase">
             ANIVERSÁRIOS
           </h2>
