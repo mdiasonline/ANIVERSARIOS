@@ -77,17 +77,18 @@ const Home: React.FC = () => {
   return (
     <div className="flex flex-col h-full bg-background-light dark:bg-background-dark pb-6">
       {/* Header */}
-      <div className="sticky top-0 z-40 flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between border-b border-gray-100 dark:border-gray-800">
-        <div className="flex items-center gap-2 flex-1 ml-1">
+      <div className="sticky top-0 z-40 flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between border-b border-gray-100 dark:border-gray-800 relative">
+        <div className="flex items-center gap-2 ml-1 z-10">
           <div className="flex flex-col items-center justify-center gap-0.5">
             <img src="/assets/cake_simple_red.png" alt="Bolo" className="size-8 object-contain" />
             <span className="text-primary text-[7px] font-black uppercase leading-none">Aniversário</span>
           </div>
-          <div className="flex flex-col ml-2 border-l border-gray-100 dark:border-white/5 pl-3">
-            <h2 className="text-[#1a1a1a] dark:text-white text-[16px] font-black leading-none tracking-tight uppercase">
-              ANIVERSÁRIOS
-            </h2>
-          </div>
+        </div>
+
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <h2 className="text-[#1a1a1a] dark:text-white text-3xl font-black leading-none tracking-tight uppercase">
+            ANIVERSÁRIOS
+          </h2>
         </div>
         <div className="flex gap-2 items-center justify-end">
           <button
