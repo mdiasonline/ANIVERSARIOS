@@ -40,7 +40,8 @@ const Admin: React.FC = () => {
           full_name,
           avatar_url,
           role,
-          updated_at
+          updated_at,
+          created_at
         `);
 
             if (error) throw error;
@@ -51,8 +52,21 @@ const Admin: React.FC = () => {
                 name: profile.full_name || profile.email?.split('@')[0] || 'Usuário',
                 email: profile.email || '',
                 avatar: profile.avatar_url,
-                role: profile.role || 'user'
+                role: profile.role || 'user',
+                created_at: profile.created_at
             }));
+
+            // Sort: Admins first, then by created_at desc (newest first)
+            mappedUsers.sort((a, b) => {
+                // 1. Role priority: Admin < User
+                if (a.role === 'admin' && b.role !== 'admin') return -1;
+                if (a.role !== 'admin' && b.role === 'admin') return 1;
+
+                // 2. Date priority: Newest first
+                const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+                const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+                return dateB - dateA;
+            });
 
             setUsers(mappedUsers);
         } catch (error: any) {

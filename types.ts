@@ -16,6 +16,7 @@ export interface User {
   email: string;
   avatar?: string;
   role?: 'user' | 'admin';
+  created_at?: string;
 }
 
 export type ViewState = 'AUTH' | 'HOME' | 'LIST' | 'ADD' | 'EDIT' | 'CONFIRMATION' | 'RECOVERY' | 'DETAILS' | 'ALERTS' | 'SETTINGS' | 'ADMIN' | 'RESET_PASSWORD';
