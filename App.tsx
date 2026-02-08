@@ -204,9 +204,7 @@ const App: React.FC = () => {
         // Restore saved view if it was an internal app view, otherwise default to HOME
         const viewsRequiringAuth = ['HOME', 'LIST', 'ADD', 'EDIT', 'CONFIRMATION', 'DETAILS', 'ALERTS', 'SETTINGS', 'ADMIN'];
 
-        if (isRecovery) {
-          setCurrentView('RESET_PASSWORD');
-        } else if (savedView && viewsRequiringAuth.includes(savedView)) {
+        if (savedView && viewsRequiringAuth.includes(savedView)) {
           setCurrentView(savedView as ViewState);
         } else {
           setCurrentView('HOME');
