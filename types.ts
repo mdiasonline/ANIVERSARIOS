@@ -7,6 +7,7 @@ export interface Birthday {
   photo_url?: string;
   relation?: string; // e.g., 'Irmão', 'Colega'
   created_by?: string;
+  created_at?: string;
 }
 
 export interface User {
