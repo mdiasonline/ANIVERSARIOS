@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../App';
 import { supabase } from '../supabase';
 import { User } from '../types';
+import { formatPhone } from '../utils';
 import BulkImportModal from '../components/BulkImportModal';
 
 const Admin: React.FC = () => {
@@ -295,7 +296,7 @@ const Admin: React.FC = () => {
                                                         {birthday.name}
                                                     </h4>
                                                     <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                                                        <span>{birthday.phone || 'Sem telefone'}</span>
+                                                        <span>{birthday.phone ? formatPhone(birthday.phone) : 'Sem telefone'}</span>
                                                         <span>•</span>
                                                         <span>{birthday.date.split('-').reverse().join('/')}</span>
                                                     </div>
