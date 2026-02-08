@@ -33,40 +33,26 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
 
                 const file = new File([blob], `aniversario_${birthday.name.split(' ')[0]}.png`, { type: 'image/png' });
 
-                // Try Web Share API (Mobile)
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({
-                            files: [file],
-                            title: 'Feliz Aniversário! 🎉',
-                            text: `Parabéns, ${birthday.name}! 🥳✨`,
-                        });
-                        onClose(); // Close after sharing
-                    } catch (shareError) {
-                        console.log('Share canceled or failed', shareError);
-                    }
-                } else {
-                    // Fallback: Download Image (Desktop)
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = `aniversario_${birthday.name}.png`;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                // Always download Image and Redirect to WhatsApp (User Request)
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `aniversario_${birthday.name}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
 
-                    // Open WhatsApp Web with text and phone number
-                    const message = `Parabéns, ${birthday.name}! 🥳✨\n(Estou enviando um cartão especial para você!)`;
-                    let cleanPhone = birthday.phone.replace(/\D/g, '');
-                    // Ensure we don't double the country code
-                    if (!cleanPhone.startsWith('55')) {
-                        cleanPhone = `55${cleanPhone}`;
-                    }
-
-                    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-                    window.open(whatsappUrl, '_blank');
-
-                    onClose();
+                // Open WhatsApp Web with text and phone number
+                const message = `Parabéns, ${birthday.name}! 🥳✨\n(Estou enviando um cartão especial para você!)`;
+                let cleanPhone = birthday.phone.replace(/\D/g, '');
+                // Ensure we don't double the country code
+                if (!cleanPhone.startsWith('55')) {
+                    cleanPhone = `55${cleanPhone}`;
                 }
+
+                const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+
+                onClose();
                 setLoading(false);
             }, 'image/png');
 
