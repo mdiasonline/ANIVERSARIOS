@@ -13,7 +13,7 @@ const Recovery: React.FC = () => {
 
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin,
+        redirectTo: 'https://aniversario.mdiasfotografia.com.br/',
       });
 
       if (error) throw error;
