@@ -104,7 +104,7 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                             )}
 
                             {/* Gradient Overlay for text readability if needed */}
-                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/10"></div>
+                            {/* Gradient Overlay removed for transparent photos */}
                         </div>
 
                         {/* Wave SVG Transitions */}
@@ -120,7 +120,7 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                         </div>
 
                         {/* Balloons - Top Right */}
-                        <div className="absolute top-[-20px] right-[-20px] z-20 pointer-events-none">
+                        <div className="absolute top-[-20px] right-[-50px] z-20 pointer-events-none">
                             <div className="relative w-48 h-64">
                                 {/* Balloon 1 */}
                                 <div className="absolute top-10 right-20 w-24 h-28 bg-[radial-gradient(circle_at_30%_30%,_#ff6b6b,_#ec1313,_#8a0a0a)] rounded-[50%_50%_50%_50%_/_45%_45%_55%_55%] shadow-[2px_10px_20px_rgba(0,0,0,0.3)] rotate-[-15deg] z-20">
@@ -162,7 +162,7 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                         <div className="flex-1 bg-white relative z-20 flex flex-col items-center pt-2 px-6 pb-6 mt-6">
 
                             {/* Typography Group */}
-                            <div className="relative text-center w-full mb-4">
+                            <div className="relative text-center w-full mb-4 mt-8">
                                 {/* Parabéns text overlapping the wave */}
                                 <h2 className="font-['Satisfy'] text-[72px] leading-none text-white absolute -top-24 left-1/2 -translate-x-1/2 z-30 drop-shadow-[0_4px_4px_rgba(0,0,0,0.15)] whitespace-nowrap"
                                     style={{
