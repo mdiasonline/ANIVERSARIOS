@@ -141,7 +141,7 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                         </div>
 
                         {/* Calendar Icon */}
-                        <div className="absolute top-[45%] right-8 z-30 transform rotate-6">
+                        <div className="absolute top-[38%] right-8 z-30 transform rotate-6">
                             <div className="w-24 bg-white rounded-xl shadow-[0_10px_25px_rgba(0,0,0,0.2)] overflow-hidden">
                                 <div className="bg-gradient-to-b from-[#ec1313] to-[#c40b0b] h-8 flex items-center justify-center relative">
                                     <div className="absolute -top-3 left-3 w-1.5 h-6 bg-gray-300 rounded-full border border-white"></div>
@@ -162,7 +162,7 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                         <div className="flex-1 bg-white relative z-20 flex flex-col items-center pt-2 px-6 pb-6 mt-6">
 
                             {/* Typography Group */}
-                            <div className="relative text-center w-full mb-4 mt-8">
+                            <div className="relative text-center w-full mb-4 mt-12">
                                 {/* Parabéns text overlapping the wave */}
                                 <h2 className="font-['Satisfy'] text-[72px] leading-none text-white absolute -top-24 left-1/2 -translate-x-1/2 z-30 drop-shadow-[0_4px_4px_rgba(0,0,0,0.15)] whitespace-nowrap"
                                     style={{
