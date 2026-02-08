@@ -87,10 +87,10 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                 <div className="flex justify-center p-4">
                     <div
                         ref={cardRef}
-                        className="relative w-[320px] h-[500px] bg-white overflow-hidden shadow-lg flex flex-col"
+                        className="relative w-[340px] h-[580px] bg-white overflow-hidden shadow-lg flex flex-col"
                     >
-                        {/* Top: Photo Area with Wave Mask */}
-                        <div className="relative h-[65%] w-full">
+                        {/* Top: Photo Area */}
+                        <div className="relative h-[55%] w-full overflow-hidden">
                             {birthday.photo_url ? (
                                 <img
                                     src={birthday.photo_url}
@@ -103,63 +103,106 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                                 </div>
                             )}
 
-                            {/* Wave SVG (White) positioned at bottom */}
-                            <div className="absolute bottom-[-1px] left-0 w-full leading-none">
-                                <svg className="w-full h-24" viewBox="0 0 1440 320" preserveAspectRatio="none">
-                                    <path fill="#ffffff" fillOpacity="1" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-                                </svg>
-                            </div>
+                            {/* Gradient Overlay for text readability if needed */}
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/10"></div>
+                        </div>
 
-                            {/* Balloons (CSS/SVG Mockup since generation failed) */}
-                            <div className="absolute top-4 right-2 flex flex-col items-center">
-                                {/* Simple CSS Balloons */}
-                                <div className="relative">
-                                    <div className="w-16 h-20 bg-gradient-to-br from-red-400 to-red-600 rounded-[50%] shadow-xl absolute -top-2 -right-6 animate-float-slow opacity-90"></div>
-                                    <div className="w-14 h-18 bg-gradient-to-br from-red-500 to-red-700 rounded-[50%] shadow-lg absolute top-4 -right-2 animate-float opacity-95"></div>
-                                    <div className="w-12 h-16 bg-gradient-to-br from-red-400 to-red-600 rounded-[50%] shadow-md absolute top-8 -right-8 animate-float-fast opacity-90"></div>
+                        {/* Wave SVG Transitions */}
+                        <div className="absolute top-[48%] left-0 w-full z-10 leading-none">
+                            {/* Gray Shadow Wave */}
+                            <svg className="w-full h-24 absolute -top-1 left-0 z-0 opacity-30" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                                <path fill="#9ca3af" fillOpacity="1" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,149.3C672,139,768,149,864,170.7C960,192,1056,224,1152,218.7C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                            </svg>
+                            {/* Main White Wave */}
+                            <svg className="w-full h-24 relative z-10" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                                <path fill="#ffffff" fillOpacity="1" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,261.3C960,256,1056,224,1152,197.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                            </svg>
+                        </div>
+
+                        {/* Balloons - Top Right */}
+                        <div className="absolute top-[-20px] right-[-20px] z-20 pointer-events-none">
+                            <div className="relative w-48 h-64">
+                                {/* Balloon 1 */}
+                                <div className="absolute top-10 right-20 w-24 h-28 bg-[radial-gradient(circle_at_30%_30%,_#ff6b6b,_#ec1313,_#8a0a0a)] rounded-[50%_50%_50%_50%_/_45%_45%_55%_55%] shadow-[2px_10px_20px_rgba(0,0,0,0.3)] rotate-[-15deg] z-20">
+                                    <div className="absolute top-[20%] left-[20%] w-4 h-8 bg-white/40 rounded-[50%] blur-[2px] rotate-[-15deg]"></div>
+                                    <div className="absolute bottom-[-10px] left-[50%] -translate-x-1/2 w-1 h-20 bg-gray-400/50"></div>
+                                </div>
+                                {/* Balloon 2 */}
+                                <div className="absolute top-32 right-10 w-28 h-32 bg-[radial-gradient(circle_at_30%_30%,_#ff6b6b,_#ec1313,_#8a0a0a)] rounded-[50%_50%_50%_50%_/_45%_45%_55%_55%] shadow-[2px_10px_20px_rgba(0,0,0,0.3)] rotate-[10deg] z-30">
+                                    <div className="absolute top-[20%] left-[20%] w-5 h-10 bg-white/40 rounded-[50%] blur-[2px] rotate-[-15deg]"></div>
+                                    <div className="absolute bottom-[-10px] left-[50%] -translate-x-1/2 w-1 h-20 bg-gray-400/50"></div>
+                                </div>
+                                {/* Balloon 3 */}
+                                <div className="absolute top-0 right-4 w-20 h-24 bg-[radial-gradient(circle_at_30%_30%,_#ff6b6b,_#ec1313,_#8a0a0a)] rounded-[50%_50%_50%_50%_/_45%_45%_55%_55%] shadow-[2px_10px_20px_rgba(0,0,0,0.3)] rotate-[5deg] z-10 opacity-90">
+                                    <div className="absolute top-[20%] left-[20%] w-3 h-6 bg-white/40 rounded-[50%] blur-[2px] rotate-[-15deg]"></div>
+                                    <div className="absolute bottom-[-10px] left-[50%] -translate-x-1/2 w-1 h-20 bg-gray-400/50"></div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Calendar Icon - Floating over wave */}
-                        <div className="absolute top-[55%] right-6 bg-white rounded-lg shadow-xl overflow-hidden flex flex-col w-20 text-center z-20 transform -translate-y-1/2 rotate-3">
-                            <div className="bg-primary text-white text-[10px] font-bold py-1 uppercase tracking-widest">
-                                {new Date(birthday.date + 'T12:00:00').toLocaleString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase()}
-                            </div>
-                            <div className="text-3xl font-black text-gray-800 py-1">
-                                {birthday.date.split('-')[2]}
+                        {/* Calendar Icon */}
+                        <div className="absolute top-[45%] right-8 z-30 transform rotate-6">
+                            <div className="w-24 bg-white rounded-xl shadow-[0_10px_25px_rgba(0,0,0,0.2)] overflow-hidden">
+                                <div className="bg-gradient-to-b from-[#ec1313] to-[#c40b0b] h-8 flex items-center justify-center relative">
+                                    <div className="absolute -top-3 left-3 w-1.5 h-6 bg-gray-300 rounded-full border border-white"></div>
+                                    <div className="absolute -top-3 right-3 w-1.5 h-6 bg-gray-300 rounded-full border border-white"></div>
+                                    <span className="text-white text-xs font-black uppercase tracking-widest">
+                                        {new Date(birthday.date + 'T12:00:00').toLocaleString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase()}
+                                    </span>
+                                </div>
+                                <div className="h-16 flex items-center justify-center">
+                                    <span className="text-[#ec1313] text-4xl font-black tracking-tighter">
+                                        {birthday.date.split('-')[2]}
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Bottom: Text Content */}
-                        <div className="flex-1 bg-white relative z-10 flex flex-col items-center justify-start pt-2 px-6 text-center">
+                        {/* Bottom Content Area */}
+                        <div className="flex-1 bg-white relative z-20 flex flex-col items-center pt-2 px-6 pb-6 mt-6">
 
                             {/* Typography Group */}
-                            <div className="relative mb-4">
-                                <h2 className="font-['Satisfy'] text-6xl text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] relative z-10"
+                            <div className="relative text-center w-full mb-4">
+                                {/* Parabéns text overlapping the wave */}
+                                <h2 className="font-['Satisfy'] text-[72px] leading-none text-white absolute -top-24 left-1/2 -translate-x-1/2 z-30 drop-shadow-[0_4px_4px_rgba(0,0,0,0.15)] whitespace-nowrap"
                                     style={{
-                                        textShadow: '2px 2px 0px #ec1313, -1px -1px 0 #ec1313, 1px -1px 0 #ec1313, -1px 1px 0 #ec1313, 1px 1px 0 #ec1313'
+                                        textShadow: '3px 3px 0px #d4d4d4, -1px -1px 0 #fff'
                                     }}>
                                     Parabéns
                                 </h2>
-                                <h1 className="text-primary font-black text-4xl uppercase tracking-wider relative -mt-6 z-20 drop-shadow-sm">
-                                    {birthday.name.split(' ')[0]}
+
+                                {/* Name */}
+                                <h1 className="text-[#b91c1c] font-black text-4xl uppercase tracking-wider relative z-20 mt-2 break-words leading-tight">
+                                    {birthday.name.split(' ')[0]} <br />
+                                    {birthday.name.split(' ').length > 1 && (
+                                        <span className="text-3xl">{birthday.name.split(' ').slice(1, 2).join(' ')}</span>
+                                    )}
                                 </h1>
                             </div>
 
                             {/* Message */}
-                            <p className="text-primary text-sm font-medium leading-relaxed max-w-[260px] mx-auto">
-                                Que este novo ciclo seja repleto de realizações, desafios inspiradores, saúde e muito sucesso.
-                            </p>
+                            <div className="text-center space-y-4 max-w-[280px]">
+                                <p className="text-[#b91c1c] text-sm font-medium leading-relaxed">
+                                    Que este novo ciclo seja repleto de realizações, desafios inspiradores, saúde e muito sucesso.
+                                </p>
 
-                            <p className="text-primary text-lg font-extrabold mt-4">
-                                Aproveite seu dia!
-                            </p>
+                                <p className="text-[#b91c1c]/90 text-lg font-extrabold">
+                                    Aproveite seu dia!
+                                </p>
+                            </div>
 
-                            {/* Confetti Effects (CSS) */}
-                            <div className="absolute top-0 left-4 w-2 h-4 bg-red-400 rotate-45 opacity-60"></div>
-                            <div className="absolute bottom-10 right-10 w-2 h-2 bg-red-500 rounded-full opacity-60"></div>
-                            <div className="absolute top-1/2 left-10 w-3 h-1 bg-red-300 -rotate-12 opacity-60"></div>
+                            {/* Logo Footer */}
+                            <div className="mt-auto pt-6 flex flex-col items-center justify-center gap-1 opacity-90">
+                                <div className="flex items-end gap-1">
+                                    {/* Flame Icon (SVG approximation) */}
+                                    <svg viewBox="0 0 24 24" className="w-8 h-8 text-[#ec1313] fill-current" preserveAspectRatio="xMidYMid meet">
+                                        <path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z" />
+                                    </svg>
+                                </div>
+                                <span className="text-[#b91c1c] text-[10px] font-bold tracking-[0.2em] uppercase">
+                                    Rede RJ MG ES
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
