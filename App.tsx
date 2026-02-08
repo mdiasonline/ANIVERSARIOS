@@ -145,6 +145,8 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const savedView = sessionStorage.getItem('currentView');
+    // Check hash immediately before it might be cleared by Supabase client
+    const isRecovery = window.location.hash.includes('type=recovery');
 
     // Check active sessions and sets the user
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -166,9 +168,6 @@ const App: React.FC = () => {
 
         // Restore saved view if it was an internal app view, otherwise default to HOME
         const viewsRequiringAuth = ['HOME', 'LIST', 'ADD', 'EDIT', 'CONFIRMATION', 'DETAILS', 'ALERTS', 'SETTINGS', 'ADMIN'];
-
-        // Check if we are in a recovery flow (hash contains type=recovery)
-        const isRecovery = window.location.hash.includes('type=recovery');
 
         if (isRecovery) {
           setCurrentView('RESET_PASSWORD');
