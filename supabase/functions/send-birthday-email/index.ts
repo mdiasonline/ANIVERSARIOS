@@ -147,7 +147,15 @@ serve(async (req) => {
 
             if (b.phone) {
                 // Remove non-digits
-                const rawPhone = b.phone.replace(/\D/g, '');
+                // Remove non-digits
+                let rawPhone = b.phone.replace(/\D/g, '');
+
+                // Ensure DDI 55 (Brazil) if missing
+                // Check if it's a mobile phone (11 digits: 11 99999-9999) or landline (10 digits: 11 3333-3333) without DDI
+                if ((rawPhone.length === 10 || rawPhone.length === 11) && !rawPhone.startsWith('55')) {
+                    rawPhone = '55' + rawPhone;
+                }
+
                 let formattedPhone = b.phone;
                 let waLink = `https://wa.me/${rawPhone}`;
 
