@@ -5,7 +5,7 @@ import { User } from '../types';
 import BulkImportModal from '../components/BulkImportModal';
 
 const Admin: React.FC = () => {
-    const { setCurrentView, showConfirm, hideConfirm, user } = useAppContext();
+    const { setCurrentView, showConfirm, hideConfirm, user, birthdays } = useAppContext();
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [showImportModal, setShowImportModal] = useState(false);
@@ -261,9 +261,61 @@ const Admin: React.FC = () => {
                             </div>
                         )}
                     </div>
-                )}
-            </main>
-        </div>
+                    </div>
+    )
+}
+
+{/* Last Registered Birthdays Section */ }
+<div className="mt-8 mb-6">
+    <h3 className="text-[#1a1a1a] dark:text-white text-lg font-black uppercase tracking-tight mb-4">
+        Últimos Cadastros
+    </h3>
+    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
+        {birthdays && birthdays.length > 0 ? (
+            <div className="divide-y divide-gray-100 dark:divide-white/5">
+                {[...birthdays]
+                    .sort((a, b) => {
+                        if (!a.created_at) return 1;
+                        if (!b.created_at) return -1;
+                        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+                    })
+                    .slice(0, 5)
+                    .map((birthday) => (
+                        <div key={birthday.id} className="p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                            <div className="flex items-center gap-3">
+                                <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary overflow-hidden">
+                                    {birthday.photo_url ? (
+                                        <img src={birthday.photo_url} alt={birthday.name} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <span className="text-xs font-bold">
+                                            {birthday.name.charAt(0).toUpperCase()}
+                                        </span>
+                                    )}
+                                </div>
+                                <div>
+                                    <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+                                        {birthday.name}
+                                    </h4>
+                                    <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                                        <span>{birthday.phone || 'Sem telefone'}</span>
+                                        <span>•</span>
+                                        <span>{birthday.date.split('-').reverse().join('/')}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="text-xs text-gray-400">
+                                {birthday.created_at ? new Date(birthday.created_at).toLocaleDateString('pt-BR') : '-'}
+                            </div>
+                        </div>
+                    ))}
+            </div>
+        ) : (
+            <div className="p-8 text-center text-gray-400 text-sm">
+                Nenhum aniversário cadastrado ainda.
+            </div>
+        )}
+    </div>
+</div>
     );
 };
 
