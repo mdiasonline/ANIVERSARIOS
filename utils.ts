@@ -105,6 +105,7 @@ export const translateError = (error: any): string => {
     'JWT expired': 'Sessão expirada. Faça login novamente.',
     'Database error': 'Erro no banco de dados. Tente novamente.',
     'Signups not allowed for this instance': 'Novos cadastros estão desativados temporariamente.',
+    'New password should be different from the old password.': 'A nova senha deve ser diferente da anterior.',
   };
 
   // Direct match
