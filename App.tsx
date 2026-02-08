@@ -145,7 +145,8 @@ const App: React.FC = () => {
 
   useEffect(() => {
     // Check hash immediately before it might be cleared by Supabase client
-    const isRecovery = window.location.hash.includes('type=recovery');
+    // Support both hash (#type=recovery) and query (?type=recovery)
+    const isRecovery = window.location.hash.includes('type=recovery') || window.location.search.includes('type=recovery');
 
     // If recovery, clear saved view to prevent interference
     if (isRecovery) {
@@ -258,7 +259,8 @@ const App: React.FC = () => {
 
       } else {
         setUser(null);
-        setCurrentView('AUTH');
+        // Protect RESET_PASSWORD from being overwritten by 'AUTH'
+        setCurrentView(prev => (prev === 'RESET_PASSWORD' ? 'RESET_PASSWORD' : 'AUTH'));
         setBirthdays([]);
         sessionStorage.removeItem('currentView');
         sessionStorage.removeItem('selectedBirthdayId');
