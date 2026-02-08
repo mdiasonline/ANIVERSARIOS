@@ -87,7 +87,7 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                 <div className="flex justify-center p-4">
                     <div
                         ref={cardRef}
-                        className="relative w-[340px] h-[580px] bg-[#fbf5e9] overflow-hidden shadow-lg flex flex-col items-center pt-8"
+                        className="relative w-[340px] h-[580px] bg-[#fbf5e9] overflow-hidden shadow-lg flex flex-col items-center pt-6"
                     >
                         {/* Confetti / Glitter Background */}
                         <div className="absolute inset-0 z-0 opacity-60 pointer-events-none">
@@ -137,8 +137,8 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                         </div>
 
                         {/* Photo Frame - Rotated */}
-                        <div className="relative z-20 mt-6 rotate-[-3deg]">
-                            <div className="bg-white p-3 pb-3 shadow-[0_10px_20px_rgba(0,0,0,0.15)] rounded-2xl w-[240px] h-[280px]">
+                        <div className="relative z-20 mt-4 rotate-[-3deg]">
+                            <div className="bg-white p-3 pb-3 shadow-[0_10px_20px_rgba(0,0,0,0.15)] rounded-2xl w-[220px] h-[260px]">
                                 <div className="w-full h-full overflow-hidden rounded-xl bg-gray-200">
                                     {birthday.photo_url ? (
                                         <img
@@ -159,7 +159,7 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                         </div>
 
                         {/* Typography Content */}
-                        <div className="relative z-30 flex flex-col items-center text-center mt-6 w-full px-6">
+                        <div className="relative z-30 flex flex-col items-center text-center mt-2 w-full px-6">
 
                             {/* Name */}
                             <h1 className="text-[#3e342b] font-serif font-medium text-3xl tracking-wide mb-1">
@@ -167,7 +167,7 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                             </h1>
 
                             {/* Parabéns Script */}
-                            <h2 className="font-['Satisfy'] text-[#c98d8d] text-5xl leading-none drop-shadow-sm mb-4">
+                            <h2 className="font-['Satisfy'] text-[#c98d8d] text-5xl leading-none drop-shadow-sm mb-2">
                                 Parabéns
                             </h2>
 
@@ -184,7 +184,7 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                             </h3>
 
                             {/* Footer Logo Text */}
-                            <div className="mt-8 text-[#c98d8d] text-sm uppercase tracking-[0.15em] font-medium opacity-80">
+                            <div className="mt-4 text-[#8a6e0a] text-sm uppercase tracking-[0.15em] font-medium opacity-80">
                                 REDE RJ MG ES
                             </div>
                         </div>
