@@ -6,7 +6,7 @@ import { formatPhone } from '../utils';
 import BulkImportModal from '../components/BulkImportModal';
 
 const Admin: React.FC = () => {
-    const { setCurrentView, showConfirm, hideConfirm, user, birthdays } = useAppContext();
+    const { setCurrentView, showConfirm, hideConfirm, user, birthdays, showShareModal } = useAppContext();
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [showImportModal, setShowImportModal] = useState(false);
@@ -316,8 +316,17 @@ const Admin: React.FC = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="text-xs text-gray-400">
-                                                {birthday.created_at ? new Date(birthday.created_at).toLocaleDateString('pt-BR') : '-'}
+                                            <div className="flex items-center gap-3">
+                                                <div className="text-xs text-gray-400">
+                                                    {birthday.created_at ? new Date(birthday.created_at).toLocaleDateString('pt-BR') : '-'}
+                                                </div>
+                                                <button
+                                                    onClick={() => showShareModal(birthday)}
+                                                    className="size-8 flex items-center justify-center rounded-full bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors"
+                                                    title="Gerar Cartão"
+                                                >
+                                                    <span className="material-symbols-outlined text-lg">image</span>
+                                                </button>
                                             </div>
                                         </div>
                                     ))}

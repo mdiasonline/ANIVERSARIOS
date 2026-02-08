@@ -40,6 +40,16 @@ const BirthdayListItem: React.FC<BirthdayListItemProps> = ({ birthday, variant =
                     <h4 className="text-[#1a1a1a] dark:text-white font-bold text-sm">{birthday.name}</h4>
                     <p className="text-gray-400 text-xs">{calculateAge(birthday.date)} anos</p>
                 </div>
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        showShareModal(birthday);
+                    }}
+                    className="text-purple-500 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-full p-2 transition-colors mr-1"
+                    title="Gerar Cartão"
+                >
+                    <span className="material-symbols-outlined text-xl">image</span>
+                </button>
                 <button className="text-primary hover:bg-primary/10 rounded-full p-1 transition-colors">
                     <span className="material-symbols-outlined">chevron_right</span>
                 </button>

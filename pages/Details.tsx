@@ -123,6 +123,15 @@ const Details: React.FC = () => {
                             </div>
                             <span className="text-white text-xs font-bold uppercase">WhatsApp</span>
                         </button>
+
+                        {/* Generate Card Button */}
+                        <button
+                            onClick={() => showShareModal(selectedBirthday)}
+                            className="col-span-2 flex flex-row items-center justify-center gap-2 p-4 bg-purple-600 rounded-2xl shadow-lg shadow-purple-500/20 active:scale-95 transition-transform"
+                        >
+                            <span className="material-symbols-outlined text-white text-3xl">image</span>
+                            <span className="text-white text-xs font-bold uppercase">Gerar Cartão de Aniversário</span>
+                        </button>
                     </div>
                 )}
 
