@@ -56,8 +56,13 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
 
                     // Open WhatsApp Web with text and phone number
                     const message = `Parabéns, ${birthday.name}! 🥳✨\n(Estou enviando um cartão especial para você!)`;
-                    const cleanPhone = birthday.phone.replace(/\D/g, '');
-                    const whatsappUrl = `https://wa.me/55${cleanPhone}?text=${encodeURIComponent(message)}`;
+                    let cleanPhone = birthday.phone.replace(/\D/g, '');
+                    // Ensure we don't double the country code
+                    if (!cleanPhone.startsWith('55')) {
+                        cleanPhone = `55${cleanPhone}`;
+                    }
+
+                    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
                     window.open(whatsappUrl, '_blank');
 
                     onClose();
