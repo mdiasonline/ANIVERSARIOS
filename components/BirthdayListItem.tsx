@@ -105,6 +105,18 @@ const BirthdayListItem: React.FC<BirthdayListItemProps> = ({ birthday, variant =
                             </svg>
                             <span>WhatsApp</span>
                         </button>
+
+                        {/* Generate Card Button */}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                showShareModal(birthday);
+                            }}
+                            className="flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-md text-[10px] font-bold uppercase transition-colors hover:bg-purple-200 dark:hover:bg-purple-900/50"
+                        >
+                            <span className="material-symbols-outlined text-sm">image</span>
+                            <span>Gerar Cartão</span>
+                        </button>
                     </div>
                 )}
                 {birthday.email && (
