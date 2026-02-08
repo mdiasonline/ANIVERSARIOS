@@ -17,7 +17,7 @@ export interface User {
   role?: 'user' | 'admin';
 }
 
-export type ViewState = 'AUTH' | 'HOME' | 'LIST' | 'ADD' | 'EDIT' | 'CONFIRMATION' | 'RECOVERY' | 'DETAILS' | 'ALERTS' | 'SETTINGS' | 'ADMIN';
+export type ViewState = 'AUTH' | 'HOME' | 'LIST' | 'ADD' | 'EDIT' | 'CONFIRMATION' | 'RECOVERY' | 'DETAILS' | 'ALERTS' | 'SETTINGS' | 'ADMIN' | 'RESET_PASSWORD';
 
 export interface ModalConfig {
   isOpen: boolean;

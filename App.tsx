@@ -16,6 +16,7 @@ import Alerts from './pages/Alerts';
 import Settings from './pages/Settings';
 import ConfirmModal from './components/ConfirmModal';
 import Admin from './pages/Admin';
+import ResetPassword from './pages/ResetPassword';
 
 // Mock Data
 const INITIAL_BIRTHDAYS: Birthday[] = [
@@ -175,8 +176,14 @@ const App: React.FC = () => {
       }
     });
 
-    // Listen for changes on auth state (logged in, signed out, etc.)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    // Listen for changes on derived auth state
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      // Prioritize Password Recovery Event
+      if (event === 'PASSWORD_RECOVERY') {
+        setCurrentView('RESET_PASSWORD');
+        return; // Important: Don't process other session logic that might redirect to HOME
+      }
+
       if (session) {
         // 1. Set minimal user immediately to unblock UI
         const basicUser: User = {
@@ -364,6 +371,8 @@ const App: React.FC = () => {
         return <Settings />;
       case 'ADMIN':
         return <Admin />;
+      case 'RESET_PASSWORD':
+        return <ResetPassword />;
       default:
         return <Auth />;
     }
