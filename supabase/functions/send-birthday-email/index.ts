@@ -202,7 +202,7 @@ serve(async (req) => {
                     'Authorization': `Bearer ${RESEND_API_KEY}`,
                 },
                 body: JSON.stringify({
-                    from: 'Aniversários <onboarding@resend.dev>', // Default testing domain
+                    from: 'ANIVERSARIOS <onboarding@resend.dev>', // Default testing domain
                     to: [email], // Send individually
                     subject: `🎉 ${todaysBirthdays.length} Aniversariante(s) Hoje!`,
                     html: personalizedHtml,
