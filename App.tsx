@@ -144,12 +144,47 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    const savedView = sessionStorage.getItem('currentView');
     // Check hash immediately before it might be cleared by Supabase client
     const isRecovery = window.location.hash.includes('type=recovery');
 
+    // If recovery, clear saved view to prevent interference
+    if (isRecovery) {
+      sessionStorage.removeItem('currentView');
+    }
+
+    const savedView = sessionStorage.getItem('currentView');
+
     // Check active sessions and sets the user
     supabase.auth.getSession().then(async ({ data: { session } }) => {
+      // If we are in recovery mode, we might not have a session YET (it comes from the hash),
+      // OR we might have a session.
+      // Crucially, if isRecovery is true, we MUST show ResetPassword, regardless of session state initially.
+      // The onAuthStateChange will eventually fire with the session.
+
+      if (isRecovery) {
+        setCurrentView('RESET_PASSWORD');
+        // If we have a session, we can fetch data, but UI should stay on ResetPassword
+        if (session) {
+          // We can fetch data in background
+          fetchBirthdays();
+          // Set user
+          const { data: profile } = await supabase
+            .from('user_profiles')
+            .select('avatar_url, role')
+            .eq('id', session.user.id)
+            .single();
+
+          setUser({
+            id: session.user.id,
+            name: session.user.user_metadata.name || session.user.email?.split('@')[0] || 'Usuário',
+            email: session.user.email || '',
+            avatar: profile?.avatar_url || session.user.user_metadata.avatar_url,
+            role: profile?.role as 'user' | 'admin' || 'user',
+          });
+        }
+        return; // STOP EXECUTION HERE for recovery flow
+      }
+
       if (session) {
         // Fetch user profile for avatar
         const { data: profile } = await supabase
