@@ -163,7 +163,7 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
 
                             {/* Name */}
                             <h1 className="text-[#3e342b] font-serif font-medium text-3xl tracking-wide mb-1">
-                                {birthday.name.split(' ')[0]} {birthday.name.split(' ')[1] }
+                                {birthday.name.split(' ')[0]}
                             </h1>
 
                             {/* Parabéns Script */}
