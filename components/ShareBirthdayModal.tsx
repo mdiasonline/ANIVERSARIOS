@@ -87,7 +87,7 @@ const ShareBirthdayModal: React.FC<ShareBirthdayModalProps> = ({ birthday, onClo
                 <div className="flex justify-center p-4">
                     <div
                         ref={cardRef}
-                        className="relative w-[240px] h-[480px] bg-[#fbf5e9] overflow-hidden shadow-lg flex flex-col items-center pt-6"
+                        className="relative w-[340px] h-[580px] bg-[#fbf5e9] overflow-hidden shadow-lg flex flex-col items-center pt-6"
                     >
                         {/* Confetti / Glitter Background */}
                         <div className="absolute inset-0 z-0 opacity-60 pointer-events-none">
