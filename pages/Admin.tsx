@@ -180,6 +180,50 @@ const Admin: React.FC = () => {
         }
     };
 
+    const rejectUser = async (targetUser: User) => {
+        showConfirm({
+            title: 'Reprovar Usuário',
+            message: `Tem certeza que deseja reprovar e remover o usuário ${targetUser.name}? Esta ação não pode ser desfeita.`,
+            confirmLabel: 'Sim, Reprovar',
+            cancelLabel: 'Cancelar',
+            variant: 'danger',
+            onConfirm: async () => {
+                hideConfirm();
+                setLoading(true);
+                try {
+                    const { error } = await supabase
+                        .from('user_profiles')
+                        .delete()
+                        .eq('id', targetUser.id);
+
+                    if (error) throw error;
+
+                    setUsers(users.filter(u => u.id !== targetUser.id));
+
+                    showConfirm({
+                        title: 'Sucesso',
+                        message: 'Usuário reprovado e removido com sucesso.',
+                        confirmLabel: 'OK',
+                        onConfirm: hideConfirm,
+                        variant: 'info'
+                    });
+                } catch (error: any) {
+                    console.error('Error rejecting user:', error);
+                    showConfirm({
+                        title: 'Erro',
+                        message: 'Erro ao reprovar usuário: ' + error.message,
+                        confirmLabel: 'OK',
+                        onConfirm: hideConfirm,
+                        variant: 'danger'
+                    });
+                } finally {
+                    setLoading(false);
+                }
+            },
+            onCancel: hideConfirm
+        });
+    };
+
     const handleTriggerEmail = async () => {
         setLoading(true);
         try {
@@ -314,12 +358,20 @@ const Admin: React.FC = () => {
 
                                 <div className="flex items-center gap-2">
                                     {u.approved === false && (
-                                        <button
-                                            onClick={() => approveUser(u)}
-                                            className="px-3 py-1.5 rounded-xl text-xs font-bold transition-colors bg-green-500 text-white hover:bg-green-600 shadow-lg shadow-green-500/20"
-                                        >
-                                            Aprovar
-                                        </button>
+                                        <>
+                                            <button
+                                                onClick={() => approveUser(u)}
+                                                className="px-3 py-1.5 rounded-xl text-xs font-bold transition-colors bg-green-500 text-white hover:bg-green-600 shadow-lg shadow-green-500/20"
+                                            >
+                                                Aprovar
+                                            </button>
+                                            <button
+                                                onClick={() => rejectUser(u)}
+                                                className="px-3 py-1.5 rounded-xl text-xs font-bold transition-colors bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-500/20"
+                                            >
+                                                Reprovar
+                                            </button>
+                                        </>
                                     )}
                                     <button
                                         onClick={() => toggleRole(u)}

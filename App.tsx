@@ -395,7 +395,9 @@ const App: React.FC = () => {
   };
 
   const renderView = () => {
-    if (user && user.approved === false) {
+    // Strict check: Must be explicitly approved to enter.
+    // This handles both 'false' (pending) and 'undefined' (deleted/rejected/loading).
+    if (user && user.approved !== true) {
       return <PendingApproval />;
     }
 

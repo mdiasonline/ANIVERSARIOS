@@ -20,8 +20,8 @@ const Auth: React.FC = () => {
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
         showConfirm({
-          title: 'Verifique seu E-mail',
-          message: 'Enviamos um link de confirmação para sua caixa de entrada. Confirme seu e-mail para continuar!',
+          title: 'Cadastro Realizado!',
+          message: 'Sua conta foi criada com sucesso. Aguarde a aprovação de um administrador para acessar o sistema.',
           confirmLabel: 'Entendi',
           onConfirm: hideConfirm,
           variant: 'info'
