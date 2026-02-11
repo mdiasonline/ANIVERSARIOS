@@ -59,7 +59,10 @@ const BirthdayListItem: React.FC<BirthdayListItemProps> = ({ birthday, variant =
 
     // List Variant (Full)
     return (
-        <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-zinc-800 flex flex-col gap-3 transition-all hover:shadow-md">
+        <div
+            onClick={onClick}
+            className={`bg-white dark:bg-zinc-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-zinc-800 flex flex-col gap-3 transition-all hover:shadow-md ${onClick ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-800/80' : ''}`}
+        >
             <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center text-primary overflow-hidden">

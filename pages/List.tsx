@@ -4,7 +4,7 @@ import { getDaysRemaining, getDayMonth } from '../utils';
 import BirthdayListItem from '../components/BirthdayListItem';
 
 const List: React.FC = () => {
-  const { birthdays, searchTerm, setSearchTerm, setCurrentView, user } = useAppContext();
+  const { birthdays, searchTerm, setSearchTerm, setCurrentView, user, setSelectedBirthday } = useAppContext();
 
 
   const filteredBirthdays = birthdays
@@ -42,7 +42,15 @@ const List: React.FC = () => {
       <main className="flex-1 overflow-y-auto max-w-lg mx-auto w-full pb-24">
         <div className="px-4 space-y-4 pt-4">
           {filteredBirthdays.map((person) => (
-            <BirthdayListItem key={person.id} birthday={person} variant="list" />
+            <BirthdayListItem
+              key={person.id}
+              birthday={person}
+              variant="list"
+              onClick={() => {
+                setSelectedBirthday(person);
+                setCurrentView('DETAILS');
+              }}
+            />
           ))}
 
           {filteredBirthdays.length === 0 && (
