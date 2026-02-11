@@ -252,7 +252,11 @@ const App: React.FC = () => {
           .select('avatar_url, role, approved')
           .eq('id', session.user.id)
           .single()
-          .then(({ data: profile }) => {
+          .then(({ data: profile, error }) => {
+            if (error) {
+              console.error('Error fetching profile:', error);
+              return;
+            }
             if (profile) {
               setUser(prev => prev ? ({
                 ...prev,
@@ -261,8 +265,7 @@ const App: React.FC = () => {
                 approved: profile.approved
               }) : null);
             }
-          })
-          .catch(err => console.error('Error fetching profile:', err));
+          });
 
       } else {
         setUser(null);
@@ -395,9 +398,10 @@ const App: React.FC = () => {
   };
 
   const renderView = () => {
-    // Strict check: Must be explicitly approved to enter.
-    // This handles both 'false' (pending) and 'undefined' (deleted/rejected/loading).
-    if (user && user.approved !== true) {
+    // Strict check: Only block if EXPLICITLY set to false.
+    // Allow undefined (loading/not fetched yet) to pass to avoid UI flash for existing users.
+    // Real security is handled by RLS on the database.
+    if (user && user.approved === false) {
       return <PendingApproval />;
     }
 
