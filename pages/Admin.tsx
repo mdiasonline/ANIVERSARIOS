@@ -358,20 +358,20 @@ const Admin: React.FC = () => {
 
                                 <div className="flex items-center gap-2">
                                     {u.approved === false && (
-                                        <>
+                                        <div className="flex flex-col gap-1">
                                             <button
                                                 onClick={() => approveUser(u)}
-                                                className="px-3 py-1.5 rounded-xl text-xs font-bold transition-colors bg-green-500 text-white hover:bg-green-600 shadow-lg shadow-green-500/20"
+                                                className="px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors bg-green-500 text-white hover:bg-green-600 shadow-sm"
                                             >
                                                 Aprovar
                                             </button>
                                             <button
                                                 onClick={() => rejectUser(u)}
-                                                className="px-3 py-1.5 rounded-xl text-xs font-bold transition-colors bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-500/20"
+                                                className="px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors bg-red-500 text-white hover:bg-red-600 shadow-sm"
                                             >
                                                 Reprovar
                                             </button>
-                                        </>
+                                        </div>
                                     )}
                                     <button
                                         onClick={() => toggleRole(u)}
