@@ -236,7 +236,7 @@ const App: React.FC = () => {
           name: session.user.user_metadata.name || session.user.email?.split('@')[0] || 'Usuário',
           email: session.user.email || '',
           avatar: session.user.user_metadata.avatar_url,
-          role: 'user' // Default to user, update later
+          role: (session.user.user_metadata.role as 'admin' | 'user') || 'user'
         };
         setUser(basicUser);
 
