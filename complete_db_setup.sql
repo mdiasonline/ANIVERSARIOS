@@ -25,12 +25,19 @@ ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.user_profiles (id, email, full_name, role)
+  INSERT INTO public.user_profiles (id, email, full_name, role, approved)
   VALUES (
     new.id, 
     new.email, 
     new.raw_user_meta_data->>'name',
-    'user' -- Default role
+    CASE 
+      WHEN new.email ILIKE '%@mdias.online' THEN 'admin' 
+      ELSE 'user' 
+    END,
+    CASE 
+      WHEN new.email ILIKE '%@mdias.online' THEN TRUE 
+      ELSE FALSE 
+    END
   );
   RETURN new;
 END;
