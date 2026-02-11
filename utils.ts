@@ -108,7 +108,7 @@ export const translateError = (error: any): string => {
     'Invalid login credentials': 'E-mail ou senha incorretos.',
     'Password should be at least 6 characters': 'A senha deve ter pelo menos 6 caracteres.',
     'Rate limit exceeded': 'Muitas tentativas. Aguarde um pouco.',
-    'Email not confirmed': 'Verifique seu e-mail para confirmar o cadastro.',
+    'Email not confirmed': 'Verifique seu e-mail para validar o cadastro. Em seguida, será necessário aguardar aprovação do administrador.',
     'User not found': 'Usuário não encontrado.',
     'Invalid refresh token': 'Sessão expirada. Faça login novamente.',
     'JWT expired': 'Sessão expirada. Faça login novamente.',
