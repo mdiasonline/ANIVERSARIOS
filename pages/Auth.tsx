@@ -21,7 +21,7 @@ const Auth: React.FC = () => {
         if (error) throw error;
         showConfirm({
           title: 'Cadastro Realizado!',
-          message: 'Sua conta foi criada com sucesso. Aguarde a aprovação de um administrador para acessar o sistema.',
+          message: 'Sua conta foi criada. Aguarde a aprovação do administrador para acessar o sistema.',
           confirmLabel: 'Entendi',
           onConfirm: hideConfirm,
           variant: 'info'
