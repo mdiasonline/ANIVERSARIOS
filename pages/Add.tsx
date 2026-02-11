@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import ImageCropper from '../components/ImageCropper';
 import { useAppContext } from '../App';
 import { Birthday } from '../types';
 import { formatPhone, formatDate, validateDate, validatePhone, validateEmail } from '../utils';
@@ -57,6 +58,7 @@ const Add: React.FC<AddProps> = ({ isEditing = false }) => {
   );
 
   const [uploading, setUploading] = useState(false);
+  const [cropImage, setCropImage] = useState<string | null>(null);
   const [errors, setErrors] = useState<{
     name?: string;
     date?: string;
@@ -92,16 +94,33 @@ const Add: React.FC<AddProps> = ({ isEditing = false }) => {
 
   const handlePhotoClick = () => photoInputRef.current?.click();
 
+
+
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setPhoto(file);
+      // Read file as data URL for cropper
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPhotoPreview(reader.result as string);
+        setCropImage(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleCropComplete = (croppedBlob: Blob) => {
+    setCropImage(null); // Close cropper
+
+    // Convert blob to file
+    const file = new File([croppedBlob], "photo.jpg", { type: "image/jpeg" });
+    setPhoto(file);
+
+    // Preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPhotoPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
   const uploadPhoto = async (file: File): Promise<string | null> => {
@@ -408,7 +427,18 @@ const Add: React.FC<AddProps> = ({ isEditing = false }) => {
           </div>
         </form>
       </main>
-    </div>
+
+
+      {
+        cropImage && (
+          <ImageCropper
+            imageSrc={cropImage}
+            onCropComplete={handleCropComplete}
+            onCancel={() => setCropImage(null)}
+          />
+        )
+      }
+    </div >
   );
 };
 

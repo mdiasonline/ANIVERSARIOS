@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ImageCropper from '../components/ImageCropper';
 import { useAppContext } from '../App';
 import { supabase } from '../supabase';
 
@@ -9,6 +10,7 @@ const Settings: React.FC = () => {
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
     const [showPhotoOptions, setShowPhotoOptions] = useState(false);
+    const [cropImage, setCropImage] = useState<string | null>(null);
 
     // Refs for different inputs
     const fileInputGalleryRef = useRef<HTMLInputElement>(null);
@@ -49,16 +51,30 @@ const Settings: React.FC = () => {
                 return;
             }
 
-            setSelectedPhoto(file);
+            // Read file as data URL for cropper
             const reader = new FileReader();
             reader.onloadend = () => {
-                setPhotoPreview(reader.result as string);
+                setCropImage(reader.result as string);
             };
             reader.readAsDataURL(file);
-
-            // Auto-upload after selection
-            uploadPhoto(file);
         }
+    };
+
+    const handleCropComplete = async (croppedBlob: Blob) => {
+        setCropImage(null); // Close cropper
+
+        // Convert blob to file
+        const file = new File([croppedBlob], "avatar.jpg", { type: "image/jpeg" });
+
+        // Preview
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setPhotoPreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+
+        // Upload
+        uploadPhoto(file);
     };
 
     const uploadPhoto = async (file: File) => {
@@ -395,7 +411,17 @@ const Settings: React.FC = () => {
                     </div>
                 </div>
             </main>
-        </div>
+
+            {
+                cropImage && (
+                    <ImageCropper
+                        imageSrc={cropImage}
+                        onCropComplete={handleCropComplete}
+                        onCancel={() => setCropImage(null)}
+                    />
+                )
+            }
+        </div >
     );
 };
 
