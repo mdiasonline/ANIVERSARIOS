@@ -133,3 +133,46 @@ export const translateError = (error: any): string => {
 
   return message; // Return original if no translation found
 };
+
+export const convertArrayToCSV = (data: any[]): string => {
+  if (!data || data.length === 0) return '';
+
+  const separator = ',';
+  const keys = Object.keys(data[0]);
+  const csvContent =
+    keys.join(separator) +
+    '\n' +
+    data
+      .map((row) => {
+        return keys
+          .map((k) => {
+            let cell = row[k] === null || row[k] === undefined ? '' : row[k];
+            cell = cell instanceof Date ? cell.toLocaleString() : cell.toString();
+            cell = cell.replace(/"/g, '""');
+            if (cell.search(/("|,|\n)/g) >= 0) {
+              cell = `"${cell}"`;
+            }
+            return cell;
+          })
+          .join(separator);
+      })
+      .join('\n');
+
+  return csvContent;
+};
+
+export const downloadCSV = (csvContent: string, fileName: string) => {
+  // Add BOM for Excel verification
+  const BOM = '\uFEFF';
+  const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  if (link.download !== undefined) {
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileName);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+};

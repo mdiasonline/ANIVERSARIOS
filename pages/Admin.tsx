@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../App';
 import { supabase } from '../supabase';
 import { User } from '../types';
-import { formatPhone } from '../utils';
+import { formatPhone, convertArrayToCSV, downloadCSV } from '../utils';
 import BulkImportModal from '../components/BulkImportModal';
 
 const Admin: React.FC = () => {
@@ -25,6 +25,62 @@ const Admin: React.FC = () => {
             onConfirm: hideConfirm,
             variant: 'info'
         });
+    };
+
+    const handleExportCSV = async () => {
+        setLoading(true);
+        try {
+            const { data, error } = await supabase
+                .from('birthdays')
+                .select('*')
+                .order('date', { ascending: true });
+
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                showConfirm({
+                    title: 'Aviso',
+                    message: 'Não há dados para exportar.',
+                    confirmLabel: 'OK',
+                    onConfirm: hideConfirm,
+                    variant: 'info'
+                });
+                return;
+            }
+
+            // Format data for CSV
+            const formattedData = data.map(item => ({
+                Nome: item.name,
+                Data: item.date.split('-').reverse().join('/'), // YYYY-MM-DD -> DD/MM/YYYY
+                Telefone: item.phone ? formatPhone(item.phone) : '',
+                Email: item.email || '',
+                Relacionamento: item.relation || ''
+            }));
+
+            const csvContent = convertArrayToCSV(formattedData);
+            const dateStr = new Date().toISOString().split('T')[0];
+            downloadCSV(csvContent, `aniversarios_export_${dateStr}.csv`);
+
+            showConfirm({
+                title: 'Sucesso',
+                message: 'Exportação iniciada! Verifique seus downloads.',
+                confirmLabel: 'OK',
+                onConfirm: hideConfirm,
+                variant: 'info'
+            });
+
+        } catch (error: any) {
+            console.error('Error exporting CSV:', error);
+            showConfirm({
+                title: 'Erro',
+                message: 'Erro ao exportar: ' + error.message,
+                confirmLabel: 'OK',
+                onConfirm: hideConfirm,
+                variant: 'danger'
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const fetchUsers = async () => {
@@ -301,6 +357,14 @@ const Admin: React.FC = () => {
                         title="Importar CSV"
                     >
                         <span className="material-symbols-outlined text-primary text-xl">upload_file</span>
+                    </div>
+
+                    <div
+                        onClick={handleExportCSV}
+                        className="flex size-10 shrink-0 items-center justify-center cursor-pointer group rounded-full hover:bg-primary/5 transition-colors"
+                        title="Exportar CSV"
+                    >
+                        <span className="material-symbols-outlined text-primary text-xl">download</span>
                     </div>
                 </div>
             </header>
