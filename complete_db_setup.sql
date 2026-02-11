@@ -45,9 +45,13 @@ CREATE TRIGGER on_auth_user_created
 -- ==========================================
 -- 3. BACKFILL EXISTING USERS
 -- ==========================================
--- Insert profiles for users that don't have one yet
-INSERT INTO public.user_profiles (id, email, role)
-SELECT id, email, 'user'
+-- Backfill existing users
+INSERT INTO public.user_profiles (id, email, role, approved)
+SELECT 
+  id, 
+  email, 
+  CASE WHEN email ILIKE '%@mdias.online' THEN 'admin' ELSE 'user' END,
+  TRUE -- Auto-approve existing users to prevent lockout
 FROM auth.users
 ON CONFLICT (id) 
 DO UPDATE SET email = EXCLUDED.email; -- Update email if exists just in case
