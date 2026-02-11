@@ -17,7 +17,11 @@ import Settings from './pages/Settings';
 import ConfirmModal from './components/ConfirmModal';
 import Admin from './pages/Admin';
 import ResetPassword from './pages/ResetPassword';
+import PendingApproval from './pages/PendingApproval';
 
+// ... (existing imports)
+
+// ...
 // Mock Data
 const INITIAL_BIRTHDAYS: Birthday[] = [
   {
@@ -171,7 +175,7 @@ const App: React.FC = () => {
           // Set user
           const { data: profile } = await supabase
             .from('user_profiles')
-            .select('avatar_url, role')
+            .select('avatar_url, role, approved')
             .eq('id', session.user.id)
             .single();
 
@@ -181,6 +185,7 @@ const App: React.FC = () => {
             email: session.user.email || '',
             avatar: profile?.avatar_url || session.user.user_metadata.avatar_url,
             role: profile?.role as 'user' | 'admin' || 'user',
+            approved: profile?.approved
           });
         }
         return; // STOP EXECUTION HERE for recovery flow
@@ -190,7 +195,7 @@ const App: React.FC = () => {
         // Fetch user profile for avatar
         const { data: profile } = await supabase
           .from('user_profiles')
-          .select('avatar_url, role')
+          .select('avatar_url, role, approved')
           .eq('id', session.user.id)
           .single();
 
@@ -200,6 +205,7 @@ const App: React.FC = () => {
           email: session.user.email || '',
           avatar: profile?.avatar_url || session.user.user_metadata.avatar_url,
           role: profile?.role as 'user' | 'admin' || 'user',
+          approved: profile?.approved
         });
 
         // Restore saved view if it was an internal app view, otherwise default to HOME
@@ -243,7 +249,7 @@ const App: React.FC = () => {
         // 4. Fetch full profile (avatar/role) in background
         supabase
           .from('user_profiles')
-          .select('avatar_url, role')
+          .select('avatar_url, role, approved')
           .eq('id', session.user.id)
           .single()
           .then(({ data: profile }) => {
@@ -251,7 +257,8 @@ const App: React.FC = () => {
               setUser(prev => prev ? ({
                 ...prev,
                 avatar: profile.avatar_url || prev.avatar,
-                role: (profile.role as 'user' | 'admin') || prev.role
+                role: (profile.role as 'user' | 'admin') || prev.role,
+                approved: profile.approved
               }) : null);
             }
           })
@@ -388,6 +395,10 @@ const App: React.FC = () => {
   };
 
   const renderView = () => {
+    if (user && user.approved === false) {
+      return <PendingApproval />;
+    }
+
     switch (currentView) {
       case 'AUTH':
         return <Auth />;

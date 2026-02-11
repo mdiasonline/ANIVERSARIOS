@@ -40,6 +40,7 @@ const Admin: React.FC = () => {
           full_name,
           avatar_url,
           role,
+          approved,
           updated_at,
           created_at
         `);
@@ -53,16 +54,21 @@ const Admin: React.FC = () => {
                 email: profile.email || '',
                 avatar: profile.avatar_url,
                 role: profile.role || 'user',
+                approved: profile.approved,
                 created_at: profile.created_at
             }));
 
-            // Sort: Admins first, then by created_at desc (newest first)
+            // Sort: Pending first, then Admins, then by created_at desc
             mappedUsers.sort((a, b) => {
-                // 1. Role priority: Admin < User
+                // 1. Pending priority: Pending < Approved (false < true)
+                if (a.approved === false && b.approved !== false) return -1;
+                if (a.approved !== false && b.approved === false) return 1;
+
+                // 2. Role priority: Admin < User
                 if (a.role === 'admin' && b.role !== 'admin') return -1;
                 if (a.role !== 'admin' && b.role === 'admin') return 1;
 
-                // 2. Date priority: Newest first
+                // 3. Date priority: Newest first
                 const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
                 const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
                 return dateB - dateA;
@@ -138,6 +144,40 @@ const Admin: React.FC = () => {
             },
             onCancel: hideConfirm
         });
+    };
+
+
+    const approveUser = async (targetUser: User) => {
+        setLoading(true);
+        try {
+            const { error } = await supabase
+                .from('user_profiles')
+                .update({ approved: true })
+                .eq('id', targetUser.id);
+
+            if (error) throw error;
+
+            setUsers(users.map(u => u.id === targetUser.id ? { ...u, approved: true } : u));
+
+            showConfirm({
+                title: 'Sucesso',
+                message: 'Usuário aprovado com sucesso!',
+                confirmLabel: 'OK',
+                onConfirm: hideConfirm,
+                variant: 'info'
+            });
+        } catch (error: any) {
+            console.error('Error approving user:', error);
+            showConfirm({
+                title: 'Erro',
+                message: 'Erro ao aprovar usuário: ' + error.message,
+                confirmLabel: 'OK',
+                onConfirm: hideConfirm,
+                variant: 'danger'
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleTriggerEmail = async () => {
@@ -263,21 +303,36 @@ const Admin: React.FC = () => {
                                                 }`}>
                                                 {u.role === 'admin' ? 'Admin' : 'Usuário'}
                                             </span>
+                                            {u.approved === false && (
+                                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-500">
+                                                    Pendente
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
 
-                                <button
-                                    onClick={() => toggleRole(u)}
-                                    // Prevent changing own role for safety in this simple demo
-                                    disabled={u.id === user?.id || (u.email && u.email.includes('mdias.online'))}
-                                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${u.id === user?.id
-                                        ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-white/5'
-                                        : 'bg-primary text-white hover:bg-primary-hover shadow-lg shadow-primary/20'
-                                        }`}
-                                >
-                                    {u.role === 'admin' ? 'Remover Admin' : 'Tornar Admin'}
-                                </button>
+                                <div className="flex items-center gap-2">
+                                    {u.approved === false && (
+                                        <button
+                                            onClick={() => approveUser(u)}
+                                            className="px-3 py-1.5 rounded-xl text-xs font-bold transition-colors bg-green-500 text-white hover:bg-green-600 shadow-lg shadow-green-500/20"
+                                        >
+                                            Aprovar
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={() => toggleRole(u)}
+                                        // Prevent changing own role for safety in this simple demo
+                                        disabled={u.id === user?.id || (u.email && u.email.includes('mdias.online'))}
+                                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${u.id === user?.id
+                                            ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-white/5'
+                                            : 'bg-primary text-white hover:bg-primary-hover shadow-lg shadow-primary/20'
+                                            }`}
+                                    >
+                                        {u.role === 'admin' ? 'Remover Admin' : 'Tornar Admin'}
+                                    </button>
+                                </div>
                             </div>
                         ))}
 

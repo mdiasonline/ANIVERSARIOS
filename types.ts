@@ -16,6 +16,7 @@ export interface User {
   email: string;
   avatar?: string;
   role?: 'user' | 'admin';
+  approved?: boolean;
   created_at?: string;
 }
 
