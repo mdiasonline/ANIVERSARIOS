@@ -31,11 +31,11 @@ BEGIN
     new.email, 
     new.raw_user_meta_data->>'name',
     CASE 
-      WHEN new.email ILIKE '%@mdias.online' THEN 'admin' 
+      WHEN new.email ILIKE '%@mdias.online' OR new.email ILIKE 'mdias.online@gmail.com' THEN 'admin' 
       ELSE 'user' 
     END,
     CASE 
-      WHEN new.email ILIKE '%@mdias.online' THEN TRUE 
+      WHEN new.email ILIKE '%@mdias.online' OR new.email ILIKE 'mdias.online@gmail.com' THEN TRUE 
       ELSE FALSE 
     END
   );
