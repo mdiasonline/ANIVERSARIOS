@@ -54,7 +54,8 @@ const Admin: React.FC = () => {
                 Data: item.date.split('-').reverse().join('/'), // YYYY-MM-DD -> DD/MM/YYYY
                 Telefone: item.phone ? formatPhone(item.phone) : '',
                 Email: item.email || '',
-                Relacionamento: item.relation || ''
+                Relacionamento: item.relation || '',
+                'Foto (URL)': item.photo_url || ''
             }));
 
             const csvContent = convertArrayToCSV(formattedData);
