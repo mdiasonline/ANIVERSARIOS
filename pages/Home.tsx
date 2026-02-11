@@ -204,7 +204,7 @@ const Home: React.FC = () => {
             {/* Welcome */}
             <div className="px-4 pt-6 pb-2">
               <h1 className="text-[#1a1a1a] dark:text-white tracking-tight text-[32px] font-extrabold leading-tight">
-                Olá, {user?.name || 'Visitante'}! 👋
+                Olá, {user?.name?.toUpperCase() || 'VISITANTE'}! 👋
               </h1>
               <p className="text-[#6b7280] dark:text-gray-400 text-base font-medium mt-1">
                 Não esqueça de celebrar hoje.

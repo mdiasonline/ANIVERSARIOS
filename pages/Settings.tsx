@@ -228,10 +228,10 @@ const Settings: React.FC = () => {
 
                                 <div className="flex-1">
                                     <p className="text-[#1a1a1a] dark:text-white font-bold text-base">
-                                        {user?.name || 'Usuário'}
+                                        {user?.name?.toUpperCase() || 'USUÁRIO'}
                                         <span className={`ml-2 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider ${user?.role === 'admin'
-                                                ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
-                                                : 'bg-gray-100 text-gray-500 dark:bg-white/10 dark:text-gray-400'
+                                            ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
+                                            : 'bg-gray-100 text-gray-500 dark:bg-white/10 dark:text-gray-400'
                                             }`}>
                                             {user?.role === 'admin' ? 'Admin' : 'Usuário'}
                                         </span>

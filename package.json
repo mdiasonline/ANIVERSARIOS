@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.95.2",
+    "@supabase/supabase-js": "^2.95.3",
     "@types/papaparse": "^5.5.2",
     "html2canvas": "^1.4.1",
     "papaparse": "^5.5.3",
