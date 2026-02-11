@@ -87,6 +87,17 @@ const Admin: React.FC = () => {
     };
 
     const toggleRole = async (targetUser: User) => {
+        if (targetUser.email === 'mdias.online') {
+            showConfirm({
+                title: 'Ação Bloqueada',
+                message: 'Este usuário é um Super Admin e não pode ter suas permissões alteradas.',
+                confirmLabel: 'OK',
+                onConfirm: hideConfirm,
+                variant: 'info'
+            });
+            return;
+        }
+
         const newRole = targetUser.role === 'admin' ? 'user' : 'admin';
 
         showConfirm({
@@ -259,7 +270,7 @@ const Admin: React.FC = () => {
                                 <button
                                     onClick={() => toggleRole(u)}
                                     // Prevent changing own role for safety in this simple demo
-                                    disabled={u.id === user?.id}
+                                    disabled={u.id === user?.id || u.email === 'mdias.online'}
                                     className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${u.id === user?.id
                                         ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-white/5'
                                         : 'bg-primary text-white hover:bg-primary-hover shadow-lg shadow-primary/20'
